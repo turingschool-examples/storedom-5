@@ -1,0 +1,3 @@
+<% @items.each do |item| %>
+  <%= link_to item.name, store_item_path(item.store.slug, item) %>
+<% end %>

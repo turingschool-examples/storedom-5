@@ -4,6 +4,7 @@ class Seed
   end
 
   def run
+    generate_stores
     generate_users
     generate_items
     generate_orders
@@ -24,7 +25,8 @@ class Seed
       item = Item.create!(
         name: Faker::Commerce.product_name,
         description: Faker::Lorem.paragraph,
-        image_url: "http://robohash.org/#{i}.png?set=set2&bgset=bg1&size=200x200"
+        image_url: "http://robohash.org/#{i}.png?set=set2&bgset=bg1&size=200x200",
+        store: Store.all.sample
       )
       puts "Item #{i}: #{item.name} created!"
     end
@@ -38,6 +40,11 @@ class Seed
       add_items(order)
       puts "Order #{i}: Order for #{user.name} created!"
     end
+  end
+
+  def generate_stores
+    Store.create!(name: "ilana")
+    Store.create!(name: "ilana1")
   end
 
   private
