@@ -55,11 +55,12 @@ describe 'ActiveRecord Obstacle Course' do
     # ----------------------- Using Raw SQL ----------------------
     order_id = ActiveRecord::Base.connection.execute('SELECT id FROM orders ORDER BY amount ASC LIMIT 1').first['id']
     # ------------------------------------------------------------
-
     # ------------------ Using ActiveRecord ----------------------
+    ##multiple ways pass this test
     orders = Order.order(amount: :desc, id: :desc).last
+    orders = Order.order(amount: :asc, id: :asc).first
+    order_id = Order.minimum(:id)
     # ------------------------------------------------------------
-
 
     # Expectation
     expect(order_id).to eq(order_1.id)
@@ -71,7 +72,10 @@ describe 'ActiveRecord Obstacle Course' do
     # ------------------------------------------------------------
 
     # ------------------ Using ActiveRecord ----------------------
+    ##multiple ways pass this test
     orders = Order.order(amount: :desc, id: :desc).first
+    orders = Order.order(amount: :asc, id: :asc).last
+    order_id = Order.maximum(:id)
     # ------------------------------------------------------------
 
     # Expectation
