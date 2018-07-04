@@ -137,7 +137,7 @@ describe 'ActiveRecord Obstacle Course' do
     # ------------------------------------------------------------
 
     # ------------------ Using ActiveRecord ----------------------
-    # Solution goes here
+    orders_between_700_and_1000 = Order.where(amount: (700 .. 1000))
     # ------------------------------------------------------------
 
     # Expectation
