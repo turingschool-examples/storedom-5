@@ -106,7 +106,7 @@ describe 'ActiveRecord Obstacle Course' do
     # ------------------------------------------------------------
 
     # ------------------ Using ActiveRecord ----------------------
-    # Solution goes here
+    items = Item.find(1, 2, 4)
     # ------------------------------------------------------------
 
     # Expectation
