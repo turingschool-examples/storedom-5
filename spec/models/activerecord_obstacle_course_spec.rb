@@ -281,7 +281,7 @@ describe 'ActiveRecord Obstacle Course' do
     # ------------------------------------------------------------
 
     # ------------------ Using ActiveRecord ----------------------
-    # Solution goes here
+    names = Item.joins(:orders).pluck('items.name')
     # ------------------------------------------------------------
 
     # Expectation
@@ -304,7 +304,14 @@ describe 'ActiveRecord Obstacle Course' do
     # ------------------------------------------------------------
 
     # ------------------ Using ActiveRecord ----------------------
-    # Solution goes here
+    users =
+      User.joins(:orders)
+        .joins(:order_items)
+        .select('users.name')
+        .where("order_items.item_id == #{item_8.id}")
+        .distinct
+        .pluck(:name)
+
     # ------------------------------------------------------------
 
     # Expectation
@@ -319,7 +326,8 @@ describe 'ActiveRecord Obstacle Course' do
     # ------------------------------------------------------------
 
     # ------------------ Using ActiveRecord ----------------------
-    # Solution goes here
+
+    names = Order.all.last.items.pluck(:name)
     # ------------------------------------------------------------
 
     # Expectation
@@ -343,7 +351,7 @@ describe 'ActiveRecord Obstacle Course' do
     # ------------------------------------------------------------
 
     # ------------------ Using ActiveRecord ----------------------
-    # Solution goes here
+
     # ------------------------------------------------------------
 
     # Expectation
@@ -386,7 +394,7 @@ describe 'ActiveRecord Obstacle Course' do
     # -----------------------------------------------------------
 
     # ------------------ Using ActiveRecord ---------------------
-    # Solution goes here
+    total_sales = Order.sum(:amount)
     # -----------------------------------------------------------
 
     # Expectation
@@ -402,7 +410,7 @@ describe 'ActiveRecord Obstacle Course' do
     # -----------------------------------------------------------
 
     # ------------------ Using ActiveRecord ---------------------
-    # Solution goes here
+    total_sales = Order.where('user_id != ?', '2').sum(:amount)
     # -----------------------------------------------------------
 
     # Expectation
