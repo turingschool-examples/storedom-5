@@ -350,7 +350,7 @@ describe 'ActiveRecord Obstacle Course' do
     end
     # ------------------------------------------------------------
 
-    # ------------------ Using ActiveRecord ----------------------
+    items_for_user_3_third_order = 
 
     # ------------------------------------------------------------
 
@@ -364,7 +364,7 @@ describe 'ActiveRecord Obstacle Course' do
     # -----------------------------------------------------------
 
     # ------------------ Using ActiveRecord ----------------------
-    # Solution goes here
+    average = Order.average(:amount)
     # ------------------------------------------------------------
 
     # Expectation
@@ -381,7 +381,7 @@ describe 'ActiveRecord Obstacle Course' do
     # -----------------------------------------------------------
 
     # ------------------ Using ActiveRecord ----------------------
-    # Solution goes here
+    orders = Order.where(user_id: 3).average(:amount)
     # ------------------------------------------------------------
 
     # Expectation
