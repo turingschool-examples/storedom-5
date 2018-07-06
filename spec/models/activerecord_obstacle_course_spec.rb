@@ -213,7 +213,7 @@ describe 'ActiveRecord Obstacle Course' do
     # ------------------------------------------------------------
 
     # ------------------ Using ActiveRecord ----------------------
-    # Solution goes here
+    items = Item.where.not(id: [3,4,5])
     # ------------------------------------------------------------
 
     # Expectation
@@ -229,7 +229,7 @@ describe 'ActiveRecord Obstacle Course' do
     # ------------------------------------------------------------
 
     # ------------------ Using ActiveRecord ----------------------
-    # Solution goes here
+    grouped_items = order.items.order(:name)
     # ------------------------------------------------------------
 
     # Expectation
@@ -244,7 +244,7 @@ describe 'ActiveRecord Obstacle Course' do
     # ------------------------------------------------------------
 
     # ------------------ Using ActiveRecord ----------------------
-    # Solution goes here
+    names = Item.pluck(:name)
     # ------------------------------------------------------------
 
     # Expectation
@@ -279,7 +279,7 @@ describe 'ActiveRecord Obstacle Course' do
     # ------------------------------------------------------------
 
     # ------------------ Using ActiveRecord ----------------------
-    # Solution goes here
+    names = Item.joins(:orders).pluck(:name)
     # ------------------------------------------------------------
 
     # Expectation
@@ -302,7 +302,10 @@ describe 'ActiveRecord Obstacle Course' do
     # ------------------------------------------------------------
 
     # ------------------ Using ActiveRecord ----------------------
-    # Solution goes here
+    users = User.joins(:order_items)
+    .where(order_items: {item_id: 8})
+    .pluck(:name)
+
     # ------------------------------------------------------------
 
     # Expectation
