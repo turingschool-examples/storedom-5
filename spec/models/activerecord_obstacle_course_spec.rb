@@ -89,7 +89,8 @@ describe 'ActiveRecord Obstacle Course' do
     # ------------------------------------------------------------
 
     # ------------------ Using ActiveRecord ----------------------
-    # Solution goes here
+    orders_of_500_and_700 = Order.where(amount: [500, 700])
+    orders_of_500_and_700 = Order.where(amount: [700, 1000])
     # ------------------------------------------------------------
 
     # Expectation
@@ -105,7 +106,7 @@ describe 'ActiveRecord Obstacle Course' do
     # ------------------------------------------------------------
 
     # ------------------ Using ActiveRecord ----------------------
-    # Solution goes here
+    items = Item.where(id: ids)
     # ------------------------------------------------------------
 
     # Expectation
@@ -121,7 +122,7 @@ describe 'ActiveRecord Obstacle Course' do
     # ------------------------------------------------------------
 
     # ------------------ Using ActiveRecord ----------------------
-    # Solution goes here
+    orders = Order.where(id: ids)
     # ------------------------------------------------------------
 
     # Expectation
@@ -136,7 +137,7 @@ describe 'ActiveRecord Obstacle Course' do
     # ------------------------------------------------------------
 
     # ------------------ Using ActiveRecord ----------------------
-    # Solution goes here
+    orders_between_700_and_1000 = Order.where(amount: 700..1000)
     # ------------------------------------------------------------
 
     # Expectation
@@ -151,7 +152,7 @@ describe 'ActiveRecord Obstacle Course' do
     # ------------------------------------------------------------
 
     # ------------------ Using ActiveRecord ----------------------
-    # Solution goes here
+    orders_less_than_550 = Order.where(amount: 0..549)
     # ------------------------------------------------------------
 
     # Expectation
@@ -166,7 +167,7 @@ describe 'ActiveRecord Obstacle Course' do
     # ------------------------------------------------------------
 
     # ------------------ Using ActiveRecord ----------------------
-    # Solution goes here
+    orders_of_user_3 = Order.where(user_id: 3)
     # ------------------------------------------------------------
 
     # Expectation
@@ -181,7 +182,7 @@ describe 'ActiveRecord Obstacle Course' do
     # ------------------------------------------------------------
 
     # ------------------ Using ActiveRecord ----------------------
-    # Solution goes here
+    orders = Order.order(amount: :desc)
     # ------------------------------------------------------------
 
     # Expectation
