@@ -294,6 +294,8 @@ describe 'ActiveRecord Obstacle Course' do
 
     # ------------------ Using ActiveRecord ----------------------
     # Solution goes here
+    names = Order.joins(:items).pluck(:name)
+    # what's different between include and joins?  include gave the same data in a different order
     # ------------------------------------------------------------
 
     # Expectation
@@ -317,6 +319,7 @@ describe 'ActiveRecord Obstacle Course' do
 
     # ------------------ Using ActiveRecord ----------------------
     # Solution goes here
+    users = User.select(:name).distinct.where(item_id: item_8.id).joins(:orders).joins(:items)
     # ------------------------------------------------------------
 
     # Expectation
