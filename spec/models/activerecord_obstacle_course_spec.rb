@@ -284,7 +284,6 @@ describe 'ActiveRecord Obstacle Course' do
     # ------------------------------------------------------------
 
     # ------------------ Using ActiveRecord ----------------------
-    # Solution goes here
     # ------------------------------------------------------------
 
     # Expectation
@@ -405,7 +404,7 @@ describe 'ActiveRecord Obstacle Course' do
     # -----------------------------------------------------------
 
     # ------------------ Using ActiveRecord ---------------------
-    # Solution goes here
+    orders = Order.where.not(id: 2).sum(:amount)
     # -----------------------------------------------------------
 
     # Expectation
