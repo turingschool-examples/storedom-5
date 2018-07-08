@@ -365,7 +365,7 @@ describe 'ActiveRecord Obstacle Course' do
     expect(average).to eq(650)
   end
 
-  it 'returns the average amount for all orders for one user' do
+  it 'returns the average amount for all orders for one user' do #DONE
     # ---------------------- Using Ruby -------------------------
     orders = Order.all.map do |order|
       order if order.user_id == 3
@@ -375,7 +375,7 @@ describe 'ActiveRecord Obstacle Course' do
     # -----------------------------------------------------------
 
     # ------------------ Using ActiveRecord ----------------------
-
+    orders = Order.where.not(id: 3).average(:amount)
     # ------------------------------------------------------------
 
     # Expectation
@@ -427,7 +427,7 @@ describe 'ActiveRecord Obstacle Course' do
     expect(orders).to eq(expected_result)
   end
 
-  it 'returns all orders for user 2 which include item_4' do
+  it 'returns all orders for user 2 which include item_4' do #DONE
     expected_result = [order_5, order_11]
 
     # ------------------ Inefficient Solution -------------------
@@ -437,7 +437,7 @@ describe 'ActiveRecord Obstacle Course' do
     # -----------------------------------------------------------
 
     # ------------------ Improved Solution ----------------------
-    orders = item_4.orders.where(user_id: 2)    
+    orders = item_4.orders.where(user_id: 2)
     # -----------------------------------------------------------
 
     # Expectation
