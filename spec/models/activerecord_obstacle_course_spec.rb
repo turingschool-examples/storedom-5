@@ -395,7 +395,7 @@ describe 'ActiveRecord Obstacle Course' do
     expect(total_sales).to eq(9750)
   end
 
-  it 'calculates the total sales for all but one user' do
+  it 'calculates the total sales for all but one user' do #DONE
     # ---------------------- Using Ruby -------------------------
     orders = Order.all.map do |order|
       order if order.user_id != 2
@@ -411,7 +411,7 @@ describe 'ActiveRecord Obstacle Course' do
     expect(total_sales).to eq(6500)
   end
 
-  it 'returns all orders which include item_4' do
+  it 'returns all orders which include item_4' do #DONE
     expected_result = [order_3, order_5, order_9, order_10, order_11, order_13, order_15]
 
     # ------------------ Inefficient Solution -------------------
