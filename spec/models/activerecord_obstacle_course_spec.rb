@@ -437,7 +437,7 @@ describe 'ActiveRecord Obstacle Course' do
     # -----------------------------------------------------------
 
     # ------------------ Improved Solution ----------------------
-    #  Solution goes here
+    orders = item_4.orders.where(user_id: 2)    
     # -----------------------------------------------------------
 
     # Expectation
