@@ -244,9 +244,8 @@ describe 'ActiveRecord Obstacle Course' do
     # ----------------------- Using Ruby -------------------------
     # names = Item.all.map(&:name)
     # ------------------------------------------------------------
-    names = Item.pluck(:name)
     # ------------------ Using ActiveRecord ----------------------
-    # Solution goes here
+    names = Item.pluck(:name)
     # ------------------------------------------------------------
 
     # Expectation
