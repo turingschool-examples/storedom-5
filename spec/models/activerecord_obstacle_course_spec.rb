@@ -215,7 +215,7 @@ describe 'ActiveRecord Obstacle Course' do
     # ------------------------------------------------------------
 
     # ------------------ Using ActiveRecord ----------------------
-
+    items = Item.where.not(id: items_not_included)
     # ------------------------------------------------------------
 
     # Expectation
