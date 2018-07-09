@@ -57,8 +57,8 @@ describe 'ActiveRecord Obstacle Course' do
     # ------------------------------------------------------------
     # ------------------ Using ActiveRecord ----------------------
     ##multiple ways pass this test
-    orders = Order.order(amount: :desc, id: :desc).last
-    orders = Order.order(amount: :asc, id: :asc).first
+    orders = Order.order(amount: :desc).last
+    orders = Order.order(amount: :asc).first
     order_id = Order.minimum(:id)
     # ------------------------------------------------------------
 
@@ -73,8 +73,8 @@ describe 'ActiveRecord Obstacle Course' do
 
     # ------------------ Using ActiveRecord ----------------------
     ##multiple ways pass this test
-    orders = Order.order(amount: :desc, id: :desc).first
-    orders = Order.order(amount: :asc, id: :asc).last
+    orders = Order.order(amount: :desc).first
+    orders = Order.order(amount: :asc).last
     order_id = Order.maximum(:id)
     # ------------------------------------------------------------
 
@@ -94,8 +94,8 @@ describe 'ActiveRecord Obstacle Course' do
     # ------------------------------------------------------------
 
     # ------------------ Using ActiveRecord ----------------------
-    orders_of_500_and_700 = Order.where("amount = 500 OR amount = 700", 500, 700)
-    orders_of_700_and_1000 = Order.where("amount = 500 OR amount = 700", 700, 1000)
+    orders_of_500_and_700 = Order.where("amount = ? OR amount = ?", 500, 700)
+    orders_of_700_and_1000 = Order.where("amount = ? OR amount = ?", 700, 1000)
     # ------------------------------------------------------------
 
     # Expectation
@@ -187,7 +187,7 @@ describe 'ActiveRecord Obstacle Course' do
     # ------------------------------------------------------------
 
     # ------------------ Using ActiveRecord ----------------------
-    orders = Order.order(amount: :desc, id: :desc)
+    orders = Order.order(amount: :desc)
     # ------------------------------------------------------------
 
     # Expectation
@@ -202,7 +202,7 @@ describe 'ActiveRecord Obstacle Course' do
     # ------------------------------------------------------------
 
     # ------------------ Using ActiveRecord ----------------------
-    orders = Order.order(amount: :asc, id: :asc)
+    orders = Order.order(amount: :asc)
     # ------------------------------------------------------------
 
     # Expectation
@@ -219,6 +219,7 @@ describe 'ActiveRecord Obstacle Course' do
 
     # ------------------ Using ActiveRecord ----------------------
     items = Item.where.not(id: 3..5)
+    items = Item.where.not(id: [3, 4, 5])
     # ------------------------------------------------------------
 
     # Expectation
@@ -306,7 +307,7 @@ describe 'ActiveRecord Obstacle Course' do
     # ------------------------------------------------------------
 
     # ------------------ Using ActiveRecord ----------------------
-    # Solution goes here
+
     # ------------------------------------------------------------
 
     # Expectation
@@ -321,7 +322,6 @@ describe 'ActiveRecord Obstacle Course' do
     # ------------------------------------------------------------
 
     # ------------------ Using ActiveRecord ----------------------
-    # Solution goes here
     # ------------------------------------------------------------
 
     # Expectation
@@ -375,7 +375,7 @@ describe 'ActiveRecord Obstacle Course' do
     # -----------------------------------------------------------
 
     # ------------------ Using ActiveRecord ----------------------
-    orders = Order.where.not(id: 3).average(:amount)
+    orders = Order.where(user_id: 3).average(:amount)
     # ------------------------------------------------------------
 
     # Expectation
@@ -404,7 +404,7 @@ describe 'ActiveRecord Obstacle Course' do
     # -----------------------------------------------------------
 
     # ------------------ Using ActiveRecord ---------------------
-    orders = Order.where.not(id: 2).sum(:amount)
+    orders = Order.where.not(user_id: 2).sum(:amount)
     # -----------------------------------------------------------
 
     # Expectation
@@ -421,6 +421,7 @@ describe 'ActiveRecord Obstacle Course' do
 
     # ------------------ Improved Solution ----------------------
     orders = item_4.orders
+    orders = Item.find(4).orders
     # -----------------------------------------------------------
 
     # Expectation
@@ -438,6 +439,7 @@ describe 'ActiveRecord Obstacle Course' do
 
     # ------------------ Improved Solution ----------------------
     orders = item_4.orders.where(user_id: 2)
+    orders = Item.find(4).orders.where(user_id: 2)
     # -----------------------------------------------------------
 
     # Expectation
