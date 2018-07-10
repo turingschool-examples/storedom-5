@@ -220,7 +220,7 @@ describe 'ActiveRecord Obstacle Course' do
     # ------------------------------------------------------------
 
     # ------------------ Using ActiveRecord ----------------------
-    items = Item.where.not("id == 3, 4, 5")
+    items = Item.where.not(id: [item_3, item_4, item_5])
     # ------------------------------------------------------------
 
     # Expectation
