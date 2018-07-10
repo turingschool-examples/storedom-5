@@ -231,12 +231,15 @@ describe 'ActiveRecord Obstacle Course' do
     expected_result = [item_2, item_3, item_4, item_5]
 
     # ----------------------- Using Ruby -------------------------
-    order = Order.find(3)
-    grouped_items = order.items.sort_by { |item| item.name }
+    # order = Order.find(3)
+    # grouped_items = order.items.sort_by { |item| item.name }
     # ------------------------------------------------------------
 
     # ------------------ Using ActiveRecord ----------------------
-    # Solution goes here
+    # grouped_items = Order.select("order.*, item.*").order(items: items.name)
+    grouped_items = Order.order(:item)
+    # grouped_items = Order.where(id: true)
+    # Order.select("date(created_at) as ordered_date, sum(price) as total_price").group("date(created_at)")
     # ------------------------------------------------------------
 
     # Expectation
@@ -247,11 +250,11 @@ describe 'ActiveRecord Obstacle Course' do
     expected_result = ['Thing 1', 'Thing 2', 'Thing 3', 'Thing 4', 'Thing 5', 'Thing 7', 'Thing 8', 'Thing 9', 'Thing 10']
 
     # ----------------------- Using Ruby -------------------------
-    names = Item.all.map(&:name)
+    # names = Item.all.map(&:name)
     # ------------------------------------------------------------
 
     # ------------------ Using ActiveRecord ----------------------
-    # Solution goes here
+    names = Item.pluck(:name)
     # ------------------------------------------------------------
 
     # Expectation
@@ -286,7 +289,7 @@ describe 'ActiveRecord Obstacle Course' do
     # ------------------------------------------------------------
 
     # ------------------ Using ActiveRecord ----------------------
-    # Solution goes here
+    names =
     # ------------------------------------------------------------
 
     # Expectation
