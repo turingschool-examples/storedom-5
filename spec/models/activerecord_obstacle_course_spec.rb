@@ -279,7 +279,7 @@ describe 'ActiveRecord Obstacle Course' do
     # ------------------------------------------------------------
 
     # ------------------ Using ActiveRecord ----------------------
-    # Solution goes here
+    names = Order.joins(:items).pluck(:name)
     # ------------------------------------------------------------
 
     # Expectation
@@ -302,7 +302,8 @@ describe 'ActiveRecord Obstacle Course' do
     # ------------------------------------------------------------
 
     # ------------------ Using ActiveRecord ----------------------
-    # Solution goes here
+    require 'pry';binding.pry
+    users = Order.select(:name).uniq.joins(:user, :items).where(item_id: 8).order(:users)
     # ------------------------------------------------------------
 
     # Expectation
