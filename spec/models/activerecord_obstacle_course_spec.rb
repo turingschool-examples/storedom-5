@@ -236,10 +236,7 @@ describe 'ActiveRecord Obstacle Course' do
     # ------------------------------------------------------------
 
     # ------------------ Using ActiveRecord ----------------------
-    # grouped_items = Order.select("order.*, item.*").order(items: items.name)
-    grouped_items = Order.order(:item)
-    # grouped_items = Order.where(id: true)
-    # Order.select("date(created_at) as ordered_date, sum(price) as total_price").group("date(created_at)")
+    grouped_items = Order.find(3).items.order(:name)
     # ------------------------------------------------------------
 
     # Expectation
@@ -279,17 +276,18 @@ describe 'ActiveRecord Obstacle Course' do
                        'Thing 1', 'Thing 4', 'Thing 5', 'Thing 7']
 
     # ----------------------- Using Ruby -------------------------
-    names = Order.all.map do |order|
-      if order.items
-        order.items.map { |item| item.name }
-      end
-    end
-
-    names = names.flatten
+    # names = Order.all.map do |order|
+    #   if order.items
+    #     order.items.map { |item| item.name }
+    #   end
+    # end
+    #
+    # names = names.flatten
     # ------------------------------------------------------------
 
     # ------------------ Using ActiveRecord ----------------------
-    names =
+    names = Order.joins(:items).group(:name)
+    # grouped_items = Order.find(3).items.order(:name)
     # ------------------------------------------------------------
 
     # Expectation
@@ -360,11 +358,11 @@ describe 'ActiveRecord Obstacle Course' do
 
   it 'returns the average amount for all orders' do
     # ---------------------- Using Ruby -------------------------
-    average = (Order.all.map(&:amount).inject(:+)) / (Order.count)
+    # average = (Order.all.map(&:amount).inject(:+)) / (Order.count)
     # -----------------------------------------------------------
 
     # ------------------ Using ActiveRecord ----------------------
-    # Solution goes here
+    average = Order.average(:amount)
     # ------------------------------------------------------------
 
     # Expectation
