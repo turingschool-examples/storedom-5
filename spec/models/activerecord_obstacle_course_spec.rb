@@ -257,7 +257,7 @@ describe 'ActiveRecord Obstacle Course' do
     expect(names).to eq(expected_result)
   end
 
-  it 'gets all item names associated with all orders' do
+  it 'gets all item names associated with all orders' do #DONE
     expected_result = ['Thing 1', 'Thing 2', 'Thing 3', 'Thing 1',
                        'Thing 1', 'Thing 2', 'Thing 3', 'Thing 1',
                        'Thing 2', 'Thing 3', 'Thing 4', 'Thing 5',
@@ -285,6 +285,8 @@ describe 'ActiveRecord Obstacle Course' do
     # ------------------------------------------------------------
 
     # ------------------ Using ActiveRecord ----------------------
+
+    names = Item.joins(:orders).pluck(:name)
     # ------------------------------------------------------------
 
     # Expectation
@@ -345,7 +347,6 @@ describe 'ActiveRecord Obstacle Course' do
     # ------------------------------------------------------------
 
     # ------------------ Using ActiveRecord ----------------------
-
     # ------------------------------------------------------------
 
     # Expectation
