@@ -384,7 +384,7 @@ describe 'ActiveRecord Obstacle Course' do
     # -----------------------------------------------------------
 
     # ------------------ Using ActiveRecord --------------------- 21
-    # Solution goes here
+    total_sales = Order.sum(:amount)
     # ----------------------------------------------------------- 21
 
     # Expectation
