@@ -400,7 +400,7 @@ describe 'ActiveRecord Obstacle Course' do
     # -----------------------------------------------------------
 
     # ------------------ Using ActiveRecord --------------------- 22
-    # Solution goes here
+    total_sales = Order.where.not(user_id: 2).sum(:amount)
     # ----------------------------------------------------------- 22
 
     # Expectation
