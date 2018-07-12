@@ -302,7 +302,9 @@ describe 'ActiveRecord Obstacle Course' do
     # ------------------------------------------------------------
 
     # ------------------ Using ActiveRecord ----------------------
-    # Solution goes here
+    # users = User.where(id: Order.where(id_orders: OrderItem.where(item_id: Item.find(8)))).name
+    # users = User.joins(:orders, :order_items, :items).where(id: 8).pluck(:names)
+    users = User.joins(:items).where('items.id': item_8.id).pluck(:name).uniq
     # ------------------------------------------------------------
 
     # Expectation
@@ -317,7 +319,7 @@ describe 'ActiveRecord Obstacle Course' do
     # ------------------------------------------------------------
 
     # ------------------ Using ActiveRecord ----------------------
-    # Solution goes here
+    names = Order.last.items.pluck(:name)
     # ------------------------------------------------------------
 
     # Expectation
@@ -341,7 +343,7 @@ describe 'ActiveRecord Obstacle Course' do
     # ------------------------------------------------------------
 
     # ------------------ Using ActiveRecord ----------------------
-    # Solution goes here
+    items_for_user_3_third_order = Order.where(user_id: 3).order(:id).third.items.pluck(:name)
     # ------------------------------------------------------------
 
     # Expectation
