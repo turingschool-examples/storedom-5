@@ -41,10 +41,10 @@ describe 'ActiveRecord Obstacle Course' do
     orders_of_200 = Order.all.select { |order| order.amount == 200 }
     # ------------------------------------------------------------
 
-    # ------------------ Using ActiveRecord ----------------------
+    # ------------------ Using ActiveRecord ---------------------- 1
     orders_of_500 = Order.where(amount: 500)
     orders_of_200 = Order.where(amount: 200)
-    # ------------------------------------------------------------
+    # ------------------------------------------------------------ 1
 
     # Expectation
     expect(orders_of_500.count).to eq(1)
@@ -56,9 +56,9 @@ describe 'ActiveRecord Obstacle Course' do
     order_id = ActiveRecord::Base.connection.execute('SELECT id FROM orders ORDER BY amount ASC LIMIT 1').first['id']
     # ------------------------------------------------------------
 
-    # ------------------ Using ActiveRecord ----------------------
+    # ------------------ Using ActiveRecord ---------------------- 2
     order_id = Order.order(amount: :asc).first.id
-    # ------------------------------------------------------------
+    # ------------------------------------------------------------ 2
 
     # Expectation
     expect(order_id).to eq(order_1.id)
@@ -69,9 +69,9 @@ describe 'ActiveRecord Obstacle Course' do
     order_id = ActiveRecord::Base.connection.execute('SELECT id FROM orders ORDER BY amount DESC LIMIT 1').first['id']
     # ------------------------------------------------------------
 
-    # ------------------ Using ActiveRecord ----------------------
+    # ------------------ Using ActiveRecord ---------------------- 3
     order_id = Order.order(amount: :desc).first.id
-    # ------------------------------------------------------------
+    # ------------------------------------------------------------ 3
 
     # Expectation
     expect(order_id).to eq(order_15.id)
@@ -88,10 +88,10 @@ describe 'ActiveRecord Obstacle Course' do
     end
     # ------------------------------------------------------------
 
-    # ------------------ Using ActiveRecord ----------------------
+    # ------------------ Using ActiveRecord ---------------------- 4
     orders_of_500_and_700 = Order.where(amount: 500).or(Order.where(amount: 700))
     orders_of_700_and_1000 = Order.where(amount: 700).or(Order.where(amount: 1000))
-    # ------------------------------------------------------------
+    # ------------------------------------------------------------ 4
 
     # Expectation
     expect(orders_of_500_and_700.count).to eq(2)
@@ -105,9 +105,9 @@ describe 'ActiveRecord Obstacle Course' do
     items = Item.all.select { |item| ids.include?(item.id) }
     # ------------------------------------------------------------
 
-    # ------------------ Using ActiveRecord ----------------------
+    # ------------------ Using ActiveRecord ---------------------- 5
     items = Item.where(id: ids)
-    # ------------------------------------------------------------
+    # ------------------------------------------------------------ 5
 
     # Expectation
     expect(items).to eq([item_1, item_2, item_4])
@@ -121,9 +121,9 @@ describe 'ActiveRecord Obstacle Course' do
     orders = Order.all.select { |order| ids.include?(order.id) }
     # ------------------------------------------------------------
 
-    # ------------------ Using ActiveRecord ----------------------
+    # ------------------ Using ActiveRecord ---------------------- 6
     orders = Order.where(id: ids)
-    # ------------------------------------------------------------
+    # ------------------------------------------------------------ 6
 
     # Expectation
     expect(orders).to eq(expected_result)
@@ -136,9 +136,9 @@ describe 'ActiveRecord Obstacle Course' do
     orders_between_700_and_1000 = Order.all.select { |order| order.amount >= 700 && order.amount <= 1000 }
     # ------------------------------------------------------------
 
-    # ------------------ Using ActiveRecord ----------------------
+    # ------------------ Using ActiveRecord ---------------------- 7
     orders_between_700_and_1000 = Order.where(amount: (700 .. 1000))
-    # ------------------------------------------------------------
+    # ------------------------------------------------------------ 7
 
     # Expectation
     expect(orders_between_700_and_1000).to eq(expected_result)
@@ -151,9 +151,9 @@ describe 'ActiveRecord Obstacle Course' do
     orders_less_than_550 = Order.all.select { |order| order.amount < 550 }
     # ------------------------------------------------------------
 
-    # ------------------ Using ActiveRecord ----------------------
+    # ------------------ Using ActiveRecord ---------------------- 8
     orders_less_than_550 = Order.where('amount < ?', 550)
-    # ------------------------------------------------------------
+    # ------------------------------------------------------------ 8
 
     # Expectation
     expect(orders_less_than_550).to eq(expected_result)
@@ -166,9 +166,9 @@ describe 'ActiveRecord Obstacle Course' do
     orders_of_user_3 = Order.all.select { |order| order.user_id == 3 }
     # ------------------------------------------------------------
 
-    # ------------------ Using ActiveRecord ----------------------
+    # ------------------ Using ActiveRecord ---------------------- 9
     orders_of_user_3 = Order.where(user_id: 3)
-    # ------------------------------------------------------------
+    # ------------------------------------------------------------ 9
 
     # Expectation
     expect(orders_of_user_3).to eq(expected_result)
@@ -181,9 +181,9 @@ describe 'ActiveRecord Obstacle Course' do
     orders = Order.all.sort_by { |order| order.amount }.reverse
     # ------------------------------------------------------------
 
-    # ------------------ Using ActiveRecord ----------------------
+    # ------------------ Using ActiveRecord ---------------------- 10
     orders = Order.order(amount: :DESC)
-    # ------------------------------------------------------------
+    # ------------------------------------------------------------ 10
 
     # Expectation
     expect(orders).to eq(expected_result)
@@ -196,9 +196,9 @@ describe 'ActiveRecord Obstacle Course' do
     orders = Order.all.sort_by { |order| order.amount }
     # ------------------------------------------------------------
 
-    # ------------------ Using ActiveRecord ----------------------
+    # ------------------ Using ActiveRecord ---------------------- 11
     orders = Order.order(:amount)
-    # ------------------------------------------------------------
+    # ------------------------------------------------------------ 11
 
     # Expectation
     expect(orders).to eq(expected_result)
@@ -212,9 +212,9 @@ describe 'ActiveRecord Obstacle Course' do
     items = Item.all.map { |item| item unless items_not_included.include?(item) }.compact
     # ------------------------------------------------------------
 
-    # ------------------ Using ActiveRecord ----------------------
+    # ------------------ Using ActiveRecord ---------------------- 12
     items = Item.where.not(id: items_not_included)
-    # ------------------------------------------------------------
+    # ------------------------------------------------------------ 12
 
     # Expectation
     expect(items).to eq(expected_result)
@@ -228,9 +228,9 @@ describe 'ActiveRecord Obstacle Course' do
     grouped_items = order.items.sort_by { |item| item.name }
     # ------------------------------------------------------------
 
-    # ------------------ Using ActiveRecord ----------------------
+    # ------------------ Using ActiveRecord ---------------------- 13
     grouped_items = order.items.order(:name)
-    # ------------------------------------------------------------
+    # ------------------------------------------------------------ 13
 
     # Expectation
     expect(grouped_items).to eq(expected_result)
@@ -243,9 +243,9 @@ describe 'ActiveRecord Obstacle Course' do
     names = Item.all.map(&:name)
     # ------------------------------------------------------------
 
-    # ------------------ Using ActiveRecord ----------------------
+    # ------------------ Using ActiveRecord ---------------------- 14
     names = Item.pluck(:name)
-    # ------------------------------------------------------------
+    # ------------------------------------------------------------ 14
 
     # Expectation
     expect(names).to eq(expected_result)
@@ -278,9 +278,9 @@ describe 'ActiveRecord Obstacle Course' do
     names = names.flatten
     # ------------------------------------------------------------
 
-    # ------------------ Using ActiveRecord ----------------------
+    # ------------------ Using ActiveRecord ---------------------- 15
     names = Item.joins(:orders).pluck(:name)
-    # ------------------------------------------------------------
+    # ------------------------------------------------------------ 15
 
     # Expectation
     expect(names).to eq(expected_result)
@@ -301,9 +301,9 @@ describe 'ActiveRecord Obstacle Course' do
     users = users.map {|u| u['name']}
     # ------------------------------------------------------------
 
-    # ------------------ Using ActiveRecord ----------------------
+    # ------------------ Using ActiveRecord ---------------------- 16
     users = 
-    # ------------------------------------------------------------
+    # ------------------------------------------------------------ 16
 
     # Expectation
     expect(users).to eq(expected_result)
@@ -316,9 +316,9 @@ describe 'ActiveRecord Obstacle Course' do
     names = Order.last.items.all.map(&:name)
     # ------------------------------------------------------------
 
-    # ------------------ Using ActiveRecord ----------------------
+    # ------------------ Using ActiveRecord ---------------------- 17
     # Solution goes here
-    # ------------------------------------------------------------
+    # ------------------------------------------------------------ 17
 
     # Expectation
     expect(names).to eq(expected_result)
@@ -340,9 +340,9 @@ describe 'ActiveRecord Obstacle Course' do
     end
     # ------------------------------------------------------------
 
-    # ------------------ Using ActiveRecord ----------------------
+    # ------------------ Using ActiveRecord ---------------------- 18
     # Solution goes here
-    # ------------------------------------------------------------
+    # ------------------------------------------------------------ 18
 
     # Expectation
     expect(items_for_user_3_third_order).to eq(expected_result)
@@ -353,9 +353,9 @@ describe 'ActiveRecord Obstacle Course' do
     average = (Order.all.map(&:amount).inject(:+)) / (Order.count)
     # -----------------------------------------------------------
 
-    # ------------------ Using ActiveRecord ----------------------
-    # Solution goes here
-    # ------------------------------------------------------------
+    # ------------------ Using ActiveRecord ---------------------- 19
+    average = Order.average(:amount)
+    # ------------------------------------------------------------ 19
 
     # Expectation
     expect(average).to eq(650)
@@ -370,9 +370,9 @@ describe 'ActiveRecord Obstacle Course' do
     average = (orders.map(&:amount).inject(:+)) / (orders.count)
     # -----------------------------------------------------------
 
-    # ------------------ Using ActiveRecord ----------------------
+    # ------------------ Using ActiveRecord ---------------------- 20
     # Solution goes here
-    # ------------------------------------------------------------
+    # ------------------------------------------------------------ 20
 
     # Expectation
     expect(average.to_i).to eq(715)
@@ -383,9 +383,9 @@ describe 'ActiveRecord Obstacle Course' do
     total_sales = Order.all.map(&:amount).inject(:+)
     # -----------------------------------------------------------
 
-    # ------------------ Using ActiveRecord ---------------------
+    # ------------------ Using ActiveRecord --------------------- 21
     # Solution goes here
-    # -----------------------------------------------------------
+    # ----------------------------------------------------------- 21
 
     # Expectation
     expect(total_sales).to eq(9750)
@@ -399,9 +399,9 @@ describe 'ActiveRecord Obstacle Course' do
     total_sales = orders.map(&:amount).inject(:+)
     # -----------------------------------------------------------
 
-    # ------------------ Using ActiveRecord ---------------------
+    # ------------------ Using ActiveRecord --------------------- 22
     # Solution goes here
-    # -----------------------------------------------------------
+    # ----------------------------------------------------------- 22
 
     # Expectation
     expect(total_sales).to eq(6500)
@@ -415,9 +415,9 @@ describe 'ActiveRecord Obstacle Course' do
     orders = order_ids.map { |id| Order.find(id) }
     # -----------------------------------------------------------
 
-    # ------------------ Improved Solution ----------------------
+    # ------------------ Improved Solution ---------------------- 23
     #  Solution goes here
-    # -----------------------------------------------------------
+    # ----------------------------------------------------------- 23
 
     # Expectation
     expect(orders).to eq(expected_result)
@@ -432,9 +432,9 @@ describe 'ActiveRecord Obstacle Course' do
     orders = order_ids.map { |id| Order.find(id) }
     # -----------------------------------------------------------
 
-    # ------------------ Improved Solution ----------------------
+    # ------------------ Improved Solution ---------------------- 24
     #  Solution goes here
-    # -----------------------------------------------------------
+    # ----------------------------------------------------------- 24
 
     # Expectation
     expect(orders).to eq(expected_result)
@@ -454,9 +454,9 @@ describe 'ActiveRecord Obstacle Course' do
     ordered_items = ordered_items.compact
     # ------------------------------------------------------------
 
-    # ------------------ ActiveRecord Solution ----------------------
+    # ------------------ ActiveRecord Solution ---------------------- 25
     # Solution goes here
-    # ---------------------------------------------------------------
+    # --------------------------------------------------------------- 25
 
     # Expectations
     expect(ordered_items).to eq(expected_result)
@@ -481,11 +481,11 @@ describe 'ActiveRecord Obstacle Course' do
     ordered_items_names = ordered_items.map(&:name)
     # ------------------------------------------------------------
 
-    # ------------------ ActiveRecord Solution ----------------------
+    # ------------------ ActiveRecord Solution ---------------------- 26
     # Solution goes here
     # When you find a solution, experiment with adjusting your method chaining
     # Which ones are you able to switch around without relying on Ruby's Enumerable methods?
-    # ---------------------------------------------------------------
+    # --------------------------------------------------------------- 26
 
     # Expectations
     expect(ordered_items_names).to eq(expected_result)
@@ -503,9 +503,9 @@ describe 'ActiveRecord Obstacle Course' do
     # Ian        |         5
     # Sal        |         5
 
-    # ------------------ ActiveRecord Solution ----------------------
+    # ------------------ ActiveRecord Solution ---------------------- 27
     # custom_results =
-    # ---------------------------------------------------------------
+    # --------------------------------------------------------------- 27
 
     expect(custom_results[0].name).to eq(user_3.name)
     expect(custom_results[0].total_order_count).to eq(5)
@@ -526,9 +526,9 @@ describe 'ActiveRecord Obstacle Course' do
     # Ian        |         20
     # Dione      |         20
 
-    # ------------------ ActiveRecord Solution ----------------------
+    # ------------------ ActiveRecord Solution ---------------------- 28
     # custom_results =
-    # ---------------------------------------------------------------
+    # --------------------------------------------------------------- 28
 
     expect(custom_results[0].name).to eq(user_2.name)
     expect(custom_results[0].total_item_count).to eq(20)
@@ -572,9 +572,9 @@ describe 'ActiveRecord Obstacle Course' do
     #
     # how will you turn this into the proper ActiveRecord commands?
 
-    # ------------------ ActiveRecord Solution ----------------------
+    # ------------------ ActiveRecord Solution ---------------------- 29
     # data = []
-    # ---------------------------------------------------------------
+    # --------------------------------------------------------------- 29
 
 
     expect(data[0].user_name).to eq(user_2.name)
@@ -598,9 +598,9 @@ describe 'ActiveRecord Obstacle Course' do
     Bullet.raise = true
     Bullet.start_request
 
-    # ------------------------------------------------------
+    # ------------------------------------------------------ 30
     orders = Order.all # Edit only this line
-    # ------------------------------------------------------
+    # ------------------------------------------------------ 30
 
     # Do not edit below this line
     orders.each do |order|
