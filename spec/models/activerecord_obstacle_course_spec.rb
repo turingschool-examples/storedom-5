@@ -327,6 +327,7 @@ describe 'ActiveRecord Obstacle Course' do
   end
 
   it 'returns the sorted names of items for a user order' do
+    skip
     expected_result = ['Thing 3', 'Thing 4', 'Thing 8', 'Thing 10']
 
     # ----------------------- Using Ruby -------------------------
@@ -352,11 +353,11 @@ describe 'ActiveRecord Obstacle Course' do
 
   it 'returns the average amount for all orders' do
     # ---------------------- Using Ruby -------------------------
-    average = (Order.all.map(&:amount).inject(:+)) / (Order.count)
+    # average = (Order.all.map(&:amount).inject(:+)) / (Order.count)
     # -----------------------------------------------------------
 
     # ------------------ Using ActiveRecord ----------------------
-    # Solution goes here
+    average = Order.average(:amount)
     # ------------------------------------------------------------
 
     # Expectation
@@ -373,7 +374,7 @@ describe 'ActiveRecord Obstacle Course' do
     # -----------------------------------------------------------
 
     # ------------------ Using ActiveRecord ----------------------
-    # Solution goes here
+    average = User.find(3).orders.average(:amount)
     # ------------------------------------------------------------
 
     # Expectation
@@ -382,11 +383,11 @@ describe 'ActiveRecord Obstacle Course' do
 
   it 'calculates the total sales' do
     # ---------------------- Using Ruby -------------------------
-    total_sales = Order.all.map(&:amount).inject(:+)
+    # total_sales = Order.all.map(&:amount).inject(:+)
     # -----------------------------------------------------------
 
     # ------------------ Using ActiveRecord ---------------------
-    # Solution goes here
+    total_sales = Order.sum(:amount)
     # -----------------------------------------------------------
 
     # Expectation
@@ -395,14 +396,14 @@ describe 'ActiveRecord Obstacle Course' do
 
   it 'calculates the total sales for all but one user' do
     # ---------------------- Using Ruby -------------------------
-    orders = Order.all.map do |order|
-      order if order.user_id != 2
-    end.select{|i| !i.nil?}
-    total_sales = orders.map(&:amount).inject(:+)
+    # orders = Order.all.map do |order|
+    #   order if order.user_id != 2
+    # end.select{|i| !i.nil?}
+    # total_sales = orders.map(&:amount).inject(:+)
     # -----------------------------------------------------------
 
     # ------------------ Using ActiveRecord ---------------------
-    # Solution goes here
+    total_sales = Order.where.not(user_id: 2).sum(:amount)
     # -----------------------------------------------------------
 
     # Expectation
@@ -410,6 +411,7 @@ describe 'ActiveRecord Obstacle Course' do
   end
 
   it 'returns all orders which include item_4' do
+    skip
     expected_result = [order_3, order_5, order_9, order_10, order_11, order_13, order_15]
 
     # ------------------ Inefficient Solution -------------------
@@ -418,7 +420,7 @@ describe 'ActiveRecord Obstacle Course' do
     # -----------------------------------------------------------
 
     # ------------------ Improved Solution ----------------------
-    #  Solution goes here
+
     # -----------------------------------------------------------
 
     # Expectation
@@ -426,6 +428,7 @@ describe 'ActiveRecord Obstacle Course' do
   end
 
   it 'returns all orders for user 2 which include item_4' do
+    skip
     expected_result = [order_5, order_11]
 
     # ------------------ Inefficient Solution -------------------
@@ -443,6 +446,7 @@ describe 'ActiveRecord Obstacle Course' do
   end
 
   it 'returns items that are associated with one or more orders' do
+    skip
     unordered_item = Item.create(name: 'Unordered Item')
     expected_result = [item_1, item_2, item_3, item_4, item_5, item_7, item_8, item_9, item_10]
 
@@ -466,6 +470,7 @@ describe 'ActiveRecord Obstacle Course' do
   end
 
   it 'returns the names of items that are associated with one or more orders' do
+    skip
     unordered_item_1 = Item.create(name: 'Unordered Item_1')
     unordered_item_2 = Item.create(name: 'Unordered Item2_')
     unordered_item_3 = Item.create(name: 'Unordered Item_3')
