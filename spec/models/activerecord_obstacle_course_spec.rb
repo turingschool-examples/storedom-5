@@ -302,8 +302,6 @@ describe 'ActiveRecord Obstacle Course' do
     # ------------------------------------------------------------
 
     # ------------------ Using ActiveRecord ----------------------
-    # users = User.where(id: Order.where(id_orders: OrderItem.where(item_id: Item.find(8)))).name
-    # users = User.joins(:orders, :order_items, :items).where(id: 8).pluck(:names)
     users = User.joins(:items).where('items.id': item_8.id).pluck(:name).uniq
     # ------------------------------------------------------------
 
@@ -356,7 +354,7 @@ describe 'ActiveRecord Obstacle Course' do
     # -----------------------------------------------------------
 
     # ------------------ Using ActiveRecord ----------------------
-    # Solution goes here
+    average = Order.average(:amount)
     # ------------------------------------------------------------
 
     # Expectation
@@ -373,7 +371,7 @@ describe 'ActiveRecord Obstacle Course' do
     # -----------------------------------------------------------
 
     # ------------------ Using ActiveRecord ----------------------
-    # Solution goes here
+    average = Order.where(user_id: 3).average(:amount)
     # ------------------------------------------------------------
 
     # Expectation
@@ -386,7 +384,7 @@ describe 'ActiveRecord Obstacle Course' do
     # -----------------------------------------------------------
 
     # ------------------ Using ActiveRecord ---------------------
-    # Solution goes here
+    total_sales = Order.sum(:amount)
     # -----------------------------------------------------------
 
     # Expectation
@@ -402,7 +400,7 @@ describe 'ActiveRecord Obstacle Course' do
     # -----------------------------------------------------------
 
     # ------------------ Using ActiveRecord ---------------------
-    # Solution goes here
+    total_sales = Order.where.not(user_id: 2).sum(:amount)
     # -----------------------------------------------------------
 
     # Expectation
@@ -418,7 +416,7 @@ describe 'ActiveRecord Obstacle Course' do
     # -----------------------------------------------------------
 
     # ------------------ Improved Solution ----------------------
-    #  Solution goes here
+    orders = Order.joins(:items).where('items.id': item_4.id)
     # -----------------------------------------------------------
 
     # Expectation
@@ -435,7 +433,7 @@ describe 'ActiveRecord Obstacle Course' do
     # -----------------------------------------------------------
 
     # ------------------ Improved Solution ----------------------
-    #  Solution goes here
+    orders = Order.joins(:items).where(user_id: user_2, 'items.id': item_4)
     # -----------------------------------------------------------
 
     # Expectation
@@ -457,7 +455,8 @@ describe 'ActiveRecord Obstacle Course' do
     # ------------------------------------------------------------
 
     # ------------------ ActiveRecord Solution ----------------------
-    # Solution goes here
+    byebug
+    ordered_items = Order.select(:items).uniq
     # ---------------------------------------------------------------
 
     # Expectations
