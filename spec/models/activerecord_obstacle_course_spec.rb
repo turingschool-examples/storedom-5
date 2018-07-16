@@ -309,7 +309,6 @@ describe 'ActiveRecord Obstacle Course' do
     # ------------------------------------------------------------
 
     # ------------------ Using ActiveRecord ----------------------
-
     # ------------------------------------------------------------
 
     # Expectation
@@ -347,6 +346,7 @@ describe 'ActiveRecord Obstacle Course' do
     # ------------------------------------------------------------
 
     # ------------------ Using ActiveRecord ----------------------
+
     # ------------------------------------------------------------
 
     # Expectation
@@ -447,7 +447,7 @@ describe 'ActiveRecord Obstacle Course' do
     expect(orders).to eq(expected_result)
   end
 
-  it 'returns items that are associated with one or more orders' do
+  it 'returns items that are associated with one or more orders' do #DONE
     unordered_item = Item.create(name: 'Unordered Item')
     expected_result = [item_1, item_2, item_3, item_4, item_5, item_7, item_8, item_9, item_10]
 
@@ -459,10 +459,9 @@ describe 'ActiveRecord Obstacle Course' do
     end
 
     ordered_items = ordered_items.compact
-    # ------------------------------------------------------------
 
     # ------------------ ActiveRecord Solution ----------------------
-    # Solution goes here
+    ordered_items = Item.joins(:orders).distinct
     # ---------------------------------------------------------------
 
     # Expectations
@@ -470,7 +469,7 @@ describe 'ActiveRecord Obstacle Course' do
     expect(ordered_items).to_not include(unordered_item)
   end
 
-  it 'returns the names of items that are associated with one or more orders' do
+  it 'returns the names of items that are associated with one or more orders' do #DONE
     unordered_item_1 = Item.create(name: 'Unordered Item_1')
     unordered_item_2 = Item.create(name: 'Unordered Item2_')
     unordered_item_3 = Item.create(name: 'Unordered Item_3')
@@ -486,12 +485,10 @@ describe 'ActiveRecord Obstacle Course' do
     end.compact
 
     ordered_items_names = ordered_items.map(&:name)
-    # ------------------------------------------------------------
+    # ------------------------------------------------------------ ##
 
     # ------------------ ActiveRecord Solution ----------------------
-    # Solution goes here
-    # When you find a solution, experiment with adjusting your method chaining
-    # Which ones are you able to switch around without relying on Ruby's Enumerable methods?
+   ordered_items_names = Item.joins(:orders).distinct.pluck(:name)
     # ---------------------------------------------------------------
 
     # Expectations
