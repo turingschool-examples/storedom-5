@@ -455,8 +455,7 @@ describe 'ActiveRecord Obstacle Course' do
     # ------------------------------------------------------------
 
     # ------------------ ActiveRecord Solution ----------------------
-    byebug
-    ordered_items = Order.select(:items).uniq
+    ordered_items = Item.joins(:order_items).where.not('order_items.order_id = 2').to_a.uniq
     # ---------------------------------------------------------------
 
     # Expectations
