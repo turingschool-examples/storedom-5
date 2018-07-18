@@ -182,7 +182,7 @@ describe 'ActiveRecord Obstacle Course' do
     # ------------------------------------------------------------
 
     # ------------------ Using ActiveRecord ----------------------
-    orders = Order.reorder('amount DESC')
+    orders = Order.reorder(amount: :desc)
     # ------------------------------------------------------------
 
     # Expectation
@@ -302,7 +302,7 @@ describe 'ActiveRecord Obstacle Course' do
     # ------------------------------------------------------------
 
     # ------------------ Using ActiveRecord ----------------------
-    users = User.joins(:items).where('items.id': item_8.id).pluck(:name).uniq
+    users = User.distinct.joins(:items).where('items.id': item_8.id).pluck(:name)
     # ------------------------------------------------------------
 
     # Expectation
@@ -455,7 +455,7 @@ describe 'ActiveRecord Obstacle Course' do
     # ------------------------------------------------------------
 
     # ------------------ ActiveRecord Solution ----------------------
-    ordered_items = Item.joins(:order_items).where.not('order_items.order_id = 2').to_a.uniq
+    ordered_items = Item.distinct.joins(:order_items).order(id: :asc)
     # ---------------------------------------------------------------
 
     # Expectations
@@ -482,6 +482,7 @@ describe 'ActiveRecord Obstacle Course' do
     # ------------------------------------------------------------
 
     # ------------------ ActiveRecord Solution ----------------------
+    # ordered_items_names = 
     # Solution goes here
     # When you find a solution, experiment with adjusting your method chaining
     # Which ones are you able to switch around without relying on Ruby's Enumerable methods?
