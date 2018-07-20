@@ -350,7 +350,7 @@ describe 'ActiveRecord Obstacle Course' do
     end
     # ------------------------------------------------------------
 
-    items_for_user_3_third_order = 
+    # TODO:items_for_user_3_third_order = Order.where(user_id: 3).joins(:items).pluck(:name)
 
     # ------------------------------------------------------------
 
@@ -426,7 +426,7 @@ describe 'ActiveRecord Obstacle Course' do
     # -----------------------------------------------------------
 
     # ------------------ Improved Solution ----------------------
-    #  Solution goes here
+    orders = Order.joins(:items).where(:items => {id: 4})
     # -----------------------------------------------------------
 
     # Expectation
@@ -443,7 +443,7 @@ describe 'ActiveRecord Obstacle Course' do
     # -----------------------------------------------------------
 
     # ------------------ Improved Solution ----------------------
-    #  Solution goes here
+    Order.where(user_id: 2).joins(:items).where(item_id: 4)
     # -----------------------------------------------------------
 
     # Expectation
