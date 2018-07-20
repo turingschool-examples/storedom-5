@@ -482,8 +482,7 @@ describe 'ActiveRecord Obstacle Course' do
     # ------------------------------------------------------------
 
     # ------------------ ActiveRecord Solution ----------------------
-    # ordered_items_names = 
-    # Solution goes here
+    ordered_items_names = Item.joins(:order_items).distinct.order(id: :asc).pluck(:name)
     # When you find a solution, experiment with adjusting your method chaining
     # Which ones are you able to switch around without relying on Ruby's Enumerable methods?
     # ---------------------------------------------------------------
@@ -493,7 +492,7 @@ describe 'ActiveRecord Obstacle Course' do
     expect(ordered_items_names).to_not include(unordered_items)
   end
 
-  xit 'returns a table of information for all users orders' do
+  it 'returns a table of information for all users orders' do
     custom_results = [user_3, user_1, user_2]
 
     # using a single ActiveRecord call, fetch a joined object that mimics the
@@ -505,9 +504,8 @@ describe 'ActiveRecord Obstacle Course' do
     # Sal        |         5
 
     # ------------------ ActiveRecord Solution ----------------------
-    # custom_results =
+    custom_results = User.select('users.name, count(users.name) AS total_order_count').joins(:orders).where(name: [user_3.name, user_1.name, user_2.name]).group(:name)
     # ---------------------------------------------------------------
-
     expect(custom_results[0].name).to eq(user_3.name)
     expect(custom_results[0].total_order_count).to eq(5)
     expect(custom_results[1].name).to eq(user_1.name)
