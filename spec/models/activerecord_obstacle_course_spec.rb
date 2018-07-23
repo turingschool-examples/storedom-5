@@ -425,17 +425,16 @@ describe 'ActiveRecord Obstacle Course' do
   end
 
   it 'returns all orders for user 2 which include item_4' do
-    skip
     expected_result = [order_5, order_11]
 
     # ------------------ Inefficient Solution -------------------
-    orders = Order.where(user_id: user_2)
-    order_ids = OrderItem.where(order_id: orders, item_id: item_4.id).map(&:order_id)
-    orders = order_ids.map { |id| Order.find(id) }
+    # orders = Order.where(user_id: user_2)
+    # order_ids = OrderItem.where(order_id: orders, item_id: item_4.id).map(&:order_id)
+    # orders = order_ids.map { |id| Order.find(id) }
     # -----------------------------------------------------------
 
     # ------------------ Improved Solution ----------------------
-    #  Solution goes here
+    orders = Order.joins(:order_items).where(user_id: 2).where("order_items.item_id=?",4)
     # -----------------------------------------------------------
 
     # Expectation
@@ -443,22 +442,21 @@ describe 'ActiveRecord Obstacle Course' do
   end
 
   it 'returns items that are associated with one or more orders' do
-    skip
     unordered_item = Item.create(name: 'Unordered Item')
     expected_result = [item_1, item_2, item_3, item_4, item_5, item_7, item_8, item_9, item_10]
 
     # ----------------------- Using Ruby -------------------------
-    items = Item.all
-
-    ordered_items = items.map do |item|
-      item if item.orders.present?
-    end
-
-    ordered_items = ordered_items.compact
+    # items = Item.all
+    #
+    # ordered_items = items.map do |item|
+    #   item if item.orders.present?
+    # end
+    #
+    # ordered_items = ordered_items.compact
     # ------------------------------------------------------------
 
     # ------------------ ActiveRecord Solution ----------------------
-    # Solution goes here
+    ordered_items = Item.joins(:orders).distinct
     # ---------------------------------------------------------------
 
     # Expectations
