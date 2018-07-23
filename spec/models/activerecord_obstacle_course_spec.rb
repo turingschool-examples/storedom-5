@@ -293,7 +293,7 @@ describe 'ActiveRecord Obstacle Course' do
     expect(names).to eq(expected_result)
   end
 
-  it 'returns the names of users who ordered one specific item' do
+  it 'returns the names of users who ordered one specific item' do #DONE
     expected_result = [user_3.name, user_2.name]
 
     # ----------------------- Using Raw SQL-----------------------
@@ -309,13 +309,14 @@ describe 'ActiveRecord Obstacle Course' do
     # ------------------------------------------------------------
 
     # ------------------ Using ActiveRecord ----------------------
+    users = User.joins(:order_items).where('order_items.item_id = ?', item_8.id).distinct.pluck(:name)
     # ------------------------------------------------------------
 
     # Expectation
     expect(users).to eq(expected_result)
   end
 
-  it 'returns the name of items associated with a specific order' do
+  it 'returns the name of items associated with a specific order' do #DONE
     expected_result = ['Thing 1', 'Thing 4', 'Thing 5', 'Thing 7']
 
     # ----------------------- Using Ruby -------------------------
@@ -323,13 +324,14 @@ describe 'ActiveRecord Obstacle Course' do
     # ------------------------------------------------------------
 
     # ------------------ Using ActiveRecord ----------------------
+    names = Order.find(15).items.pluck(:name)
     # ------------------------------------------------------------
 
     # Expectation
     expect(names).to eq(expected_result)
   end
 
-  it 'returns the sorted names of items for a user order' do
+  it 'returns the sorted names of items for a user order' do #DONE
     expected_result = ['Thing 3', 'Thing 4', 'Thing 8', 'Thing 10']
 
     # ----------------------- Using Ruby -------------------------
@@ -346,7 +348,7 @@ describe 'ActiveRecord Obstacle Course' do
     # ------------------------------------------------------------
 
     # ------------------ Using ActiveRecord ----------------------
-
+    items_for_user_3_third_order = Order.where(user_id: 3).third.items.pluck(:name)
     # ------------------------------------------------------------
 
     # Expectation
