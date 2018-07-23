@@ -291,20 +291,19 @@ describe 'ActiveRecord Obstacle Course' do
     expected_result = [user_3.name, user_2.name]
 
     # ----------------------- Using Raw SQL-----------------------
-    # users = ActiveRecord::Base.connection.execute("
-    #   select
-    #     distinct users.name
-    #   from users
-    #     join orders on orders.user_id=users.id
-    #     join order_items ON order_items.order_id=orders.id
-    #   where order_items.item_id=#{item_8.id}
-    #   ORDER BY users.name")
-    #   require 'pry';binding.pry
-    # users = users.map {|u| u['name']}
+    users = ActiveRecord::Base.connection.execute("
+      select
+        distinct users.name
+      from users
+        join orders on orders.user_id=users.id
+        join order_items ON order_items.order_id=orders.id
+      where order_items.item_id=#{item_8.id}
+      ORDER BY users.name")
+    users = users.map {|u| u['name']}
     # ------------------------------------------------------------
 
     # ------------------ Using ActiveRecord ----------------------
-    users = User.joins(:orders).joins(:order_items).where('order_items.item_id = ?', item_8.id).distinct.pluck(:name)
+    users = User.joins(:order_items).where('order_items.item_id = ?', item_8.id).distinct.pluck(:name)
     # ------------------------------------------------------------
 
     # Expectation
@@ -319,7 +318,7 @@ describe 'ActiveRecord Obstacle Course' do
     # ------------------------------------------------------------
 
     # ------------------ Using ActiveRecord ----------------------
-    names = Order.order(id: :desc).limit(1)[0].items.pluck(:name)
+    names = Order.order(id: :desc).limit(1).first.items.pluck(:name)
     # ------------------------------------------------------------
 
     # Expectation
@@ -327,24 +326,23 @@ describe 'ActiveRecord Obstacle Course' do
   end
 
   it 'returns the sorted names of items for a user order' do
-    skip
     expected_result = ['Thing 3', 'Thing 4', 'Thing 8', 'Thing 10']
 
     # ----------------------- Using Ruby -------------------------
-    items_for_user_3_third_order = []
-    grouped_orders = []
-    Order.all.each do |order|
-      if order.items
-        grouped_orders << order if order.user_id == 3
-      end
-    end
-    grouped_orders.each_with_index do |order, idx|
-      items_for_user_3_third_order = order.items.map(&:name) if idx == 2
-    end
+    # items_for_user_3_third_order = []
+    # grouped_orders = []
+    # Order.all.each do |order|
+    #   if order.items
+    #     grouped_orders << order if order.user_id == 3
+    #   end
+    # end
+    # grouped_orders.each_with_index do |order, idx|
+    #   items_for_user_3_third_order = order.items.map(&:name) if idx == 2
+    # end
     # ------------------------------------------------------------
 
     # ------------------ Using ActiveRecord ----------------------
-    # Solution goes here
+    items_for_user_3_third_order = Order.where(user_id: 3).third.items.pluck(:name)
     # ------------------------------------------------------------
 
     # Expectation
@@ -411,16 +409,15 @@ describe 'ActiveRecord Obstacle Course' do
   end
 
   it 'returns all orders which include item_4' do
-    skip
     expected_result = [order_3, order_5, order_9, order_10, order_11, order_13, order_15]
 
     # ------------------ Inefficient Solution -------------------
-    order_ids = OrderItem.where(item_id: item_4.id).map(&:order_id)
-    orders = order_ids.map { |id| Order.find(id) }
+    # order_ids = OrderItem.where(item_id: item_4.id).map(&:order_id)
+    # orders = order_ids.map { |id| Order.find(id) }
     # -----------------------------------------------------------
 
     # ------------------ Improved Solution ----------------------
-
+    orders = Item.find(4).orders
     # -----------------------------------------------------------
 
     # Expectation
