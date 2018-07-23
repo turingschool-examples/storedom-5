@@ -305,7 +305,9 @@ describe 'ActiveRecord Obstacle Course' do
     # ------------------------------------------------------------
 
     # ------------------ Using ActiveRecord ---------------------- 16
-    users = 
+    users = User.joins(:order_items)
+            .where("order_items.item_id = ?", item_8.id)
+            .distinct.pluck(:name)
     # ------------------------------------------------------------ 16
 
     # Expectation
@@ -419,7 +421,7 @@ describe 'ActiveRecord Obstacle Course' do
     # -----------------------------------------------------------
 
     # ------------------ Improved Solution ---------------------- 23
-    orders = Order.joins(:items).where("items.id = 4")
+    orders = Order.joins(:items).where("items.id = ?", item_4.id)
     # ----------------------------------------------------------- 23
 
     # Expectation
@@ -436,7 +438,8 @@ describe 'ActiveRecord Obstacle Course' do
     # -----------------------------------------------------------
 
     # ------------------ Improved Solution ---------------------- 24
-    orders = Order.joins(:items).where("items.id = 4 AND orders.user_id = 2")
+    orders = Order.joins(:items)
+            .where("items.id = ? AND orders.user_id = ?", item_4.id, user_2.id)
     # ----------------------------------------------------------- 24
 
     # Expectation
