@@ -419,7 +419,7 @@ describe 'ActiveRecord Obstacle Course' do
     # -----------------------------------------------------------
 
     # ------------------ Improved Solution ---------------------- 23
-  
+    orders = Order.joins(:items).where("items.id = 4")
     # ----------------------------------------------------------- 23
 
     # Expectation
