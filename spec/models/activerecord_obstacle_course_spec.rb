@@ -458,7 +458,7 @@ describe 'ActiveRecord Obstacle Course' do
     # ------------------------------------------------------------
 
     # ------------------ ActiveRecord Solution ---------------------- 25
-    # Solution goes here
+    ordered_items = Item.joins(:orders).distinct
     # --------------------------------------------------------------- 25
 
     # Expectations
@@ -485,7 +485,7 @@ describe 'ActiveRecord Obstacle Course' do
     # ------------------------------------------------------------
 
     # ------------------ ActiveRecord Solution ---------------------- 26
-    # Solution goes here
+    ordered_items = Item.joins(:orders).distinct.name
     # When you find a solution, experiment with adjusting your method chaining
     # Which ones are you able to switch around without relying on Ruby's Enumerable methods?
     # --------------------------------------------------------------- 26
