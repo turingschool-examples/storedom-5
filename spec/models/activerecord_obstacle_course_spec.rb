@@ -423,7 +423,6 @@ describe 'ActiveRecord Obstacle Course' do
     # -----------------------------------------------------------
 
     # ------------------ Improved Solution ----------------------
-    # orders = OrderItem.joins(:item).where('item_id = ?', item_4.id)
     orders = Order.joins(:order_items).where('item_id = ?', item_4.id)
     # -----------------------------------------------------------
 
@@ -435,13 +434,13 @@ describe 'ActiveRecord Obstacle Course' do
     expected_result = [order_5, order_11]
 
     # ------------------ Inefficient Solution -------------------
-    orders = Order.where(user_id: user_2)
-    order_ids = OrderItem.where(order_id: orders, item_id: item_4.id).map(&:order_id)
-    orders = order_ids.map { |id| Order.find(id) }
+    # orders = Order.where(user_id: user_2)
+    # order_ids = OrderItem.where(order_id: orders, item_id: item_4.id).map(&:order_id)
+    # orders = order_ids.map { |id| Order.find(id) }
     # -----------------------------------------------------------
 
     # ------------------ Improved Solution ----------------------
-    #  Solution goes here
+    orders = Order.joins(:order_items).where('item_id = ?', item_4.id).where('user_id = ?', user_2.id)
     # -----------------------------------------------------------
 
     # Expectation
