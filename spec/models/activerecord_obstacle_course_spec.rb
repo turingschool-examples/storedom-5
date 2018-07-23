@@ -348,7 +348,7 @@ describe 'ActiveRecord Obstacle Course' do
     # ------------------------------------------------------------
 
     # ------------------ Using ActiveRecord ---------------------- 18
-    # Solution goes here
+    items_for_user_3_third_order = Order.where(user_id: 3).third.items.pluck(:name)
     # ------------------------------------------------------------ 18
 
     # Expectation
