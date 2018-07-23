@@ -322,7 +322,9 @@ describe 'ActiveRecord Obstacle Course' do
     # ------------------------------------------------------------
 
     # ------------------ Using ActiveRecord ---------------------- 17
-    # Solution goes here
+    names = Item.joins(:orders)
+            .where("order_id = ?", Order.last.id)
+            .pluck(:name)
     # ------------------------------------------------------------ 17
 
     # Expectation
