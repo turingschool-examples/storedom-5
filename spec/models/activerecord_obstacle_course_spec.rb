@@ -531,7 +531,7 @@ describe 'ActiveRecord Obstacle Course' do
     # Dione      |         20
 
     # ------------------ ActiveRecord Solution ----------------------
-    custom_results = custom_results = User.select("users.*, count(item_id) AS total_item_count")
+    custom_results = User.select("users.*, count(item_id) AS total_item_count")
     .joins(:order_items)
     .group(:name)
     .order(name: :desc)
