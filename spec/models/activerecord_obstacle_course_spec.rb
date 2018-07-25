@@ -524,7 +524,7 @@ describe 'ActiveRecord Obstacle Course' do
     # Dione      |         20
 
     # ------------------ ActiveRecord Solution ----------------------
-    custom_results = User.select('users.name, count(items.id) AS total_item_count').joins(:items).group(:name).order('users.name desc')
+    custom_results = User.select('users.name, count(items.id) AS total_item_count').joins(:items).group(:name).order(name: :desc)
     # ---------------------------------------------------------------
 
     expect(custom_results[0].name).to eq(user_2.name)
@@ -570,7 +570,7 @@ describe 'ActiveRecord Obstacle Course' do
     # how will you turn this into the proper ActiveRecord commands?
 
     # ------------------ ActiveRecord Solution ----------------------
-    data = User.select('users.name AS user_name, order_items.order_id AS order_id, count(order_items.order_id) AS item_count').joins(:order_items).group(:order_id).order('users.name desc')
+    data = User.select('users.name AS user_name, order_items.order_id AS order_id, count(order_items.order_id) AS item_count').joins(:order_items).group(:order_id).order(name: :desc)
     # ---------------------------------------------------------------
 
     expect(data[0].user_name).to eq(user_2.name)
