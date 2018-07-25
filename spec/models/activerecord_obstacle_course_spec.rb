@@ -473,7 +473,7 @@ describe 'ActiveRecord Obstacle Course' do
 
   it 'returns the names of items that are associated with one or more orders' do
     unordered_item_1 = Item.create(name: 'Unordered Item_1')
-    unordered_item_2 = Item.create(name: 'Unordered Item2_')
+    unordered_item_2 = Item.create(name: 'Unordered Item_2')
     unordered_item_3 = Item.create(name: 'Unordered Item_3')
 
     unordered_items = [unordered_item_1, unordered_item_2, unordered_item_3]
@@ -490,7 +490,8 @@ describe 'ActiveRecord Obstacle Course' do
     # ------------------------------------------------------------
 
     # ------------------ ActiveRecord Solution ---------------------- 26
-    ordered_items = Item.joins(:orders).distinct.name
+    ordered_items = Item.distinct.joins(:order_items).pluck(:name)
+    ordered_items = Item.distinct.joins(:orders).name
     # When you find a solution, experiment with adjusting your method chaining
     # Which ones are you able to switch around without relying on Ruby's Enumerable methods?
     # --------------------------------------------------------------- 26
@@ -586,7 +587,7 @@ describe 'ActiveRecord Obstacle Course' do
     # how will you turn this into the proper ActiveRecord commands?
 
     # ------------------ ActiveRecord Solution ---------------------- 29
-    # data = []
+    #data = User.select('users_name as ')
     # --------------------------------------------------------------- 29
 
 
