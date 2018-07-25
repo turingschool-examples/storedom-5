@@ -302,7 +302,7 @@ describe 'ActiveRecord Obstacle Course' do
     # ------------------------------------------------------------
 
     # ------------------ Using ActiveRecord ----------------------
-    users = User.distinct.joins(:items).where('items.id': item_8.id).pluck(:name)
+    users = User.distinct.joins(:order_items).where('order_items.item_id': item_8.id).pluck(:name)
     # ------------------------------------------------------------
 
     # Expectation
@@ -416,7 +416,7 @@ describe 'ActiveRecord Obstacle Course' do
     # -----------------------------------------------------------
 
     # ------------------ Improved Solution ----------------------
-    orders = Order.joins(:items).where('items.id': item_4.id)
+    orders = Order.joins(:order_items).where('order_items.item_id': item_4.id)
     # -----------------------------------------------------------
 
     # Expectation
@@ -433,7 +433,7 @@ describe 'ActiveRecord Obstacle Course' do
     # -----------------------------------------------------------
 
     # ------------------ Improved Solution ----------------------
-    orders = Order.joins(:items).where(user_id: user_2, 'items.id': item_4)
+    orders = Order.joins(:order_items).where(user_id: user_2, 'order_items.item_id': item_4)
     # -----------------------------------------------------------
 
     # Expectation
@@ -524,7 +524,7 @@ describe 'ActiveRecord Obstacle Course' do
     # Dione      |         20
 
     # ------------------ ActiveRecord Solution ----------------------
-    custom_results = User.select('users.name, count(items.id) AS total_item_count').joins(:items).group(:name).order(name: :desc)
+    custom_results = User.select('users.name, count(order_items.item_id) AS total_item_count').joins(:order_items).group(:name).order(name: :desc)
     # ---------------------------------------------------------------
 
     expect(custom_results[0].name).to eq(user_2.name)
