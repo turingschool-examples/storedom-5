@@ -545,7 +545,7 @@ describe 'ActiveRecord Obstacle Course' do
     expect(custom_results[2].total_item_count).to eq(20)
   end
 
-  it 'returns a table of information for all users orders and item counts' do
+  it 'returns a table of information for all users orders and item counts' do #DONE
     # using a single ActiveRecord call, fetch a joined object that mimics the
     # following table of information:
     # --------------------------------------------------------------------------
