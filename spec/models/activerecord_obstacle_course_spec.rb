@@ -503,7 +503,7 @@ describe 'ActiveRecord Obstacle Course' do
     expect(ordered_items_names).to_not include(unordered_items)
   end
 
-  xit 'returns a table of information for all users orders' do
+  it 'returns a table of information for all users orders' do
     custom_results = [user_3, user_1, user_2]
 
     # using a single ActiveRecord call, fetch a joined object that mimics the
@@ -515,7 +515,7 @@ describe 'ActiveRecord Obstacle Course' do
     # Sal        |         5
 
     # ------------------ ActiveRecord Solution ----------------------
-    # custom_results =
+    custom_results = User.joins(:orders).select('users.name, count(orders.id) as total_order_count').group(:name)
     # ---------------------------------------------------------------
 
     expect(custom_results[0].name).to eq(user_3.name)
@@ -526,7 +526,7 @@ describe 'ActiveRecord Obstacle Course' do
     expect(custom_results[2].total_order_count).to eq(5)
   end
 
-  xit 'returns a table of information for all users items' do
+  it 'returns a table of information for all users items' do
     custom_results = [user_2, user_1, user_3]
 
     # using a single ActiveRecord call, fetch a joined object that mimics the
@@ -538,7 +538,7 @@ describe 'ActiveRecord Obstacle Course' do
     # Dione      |         20
 
     # ------------------ ActiveRecord Solution ----------------------
-    # custom_results =
+    custom_results = User.joins(:order_items).select('users.name, count(item_id) as total_item_count').group(:name).order('name DESC')
     # ---------------------------------------------------------------
 
     expect(custom_results[0].name).to eq(user_2.name)
@@ -549,7 +549,7 @@ describe 'ActiveRecord Obstacle Course' do
     expect(custom_results[2].total_item_count).to eq(20)
   end
 
-  xit 'returns a table of information for all users orders and item counts' do
+  it 'returns a table of information for all users orders and item counts' do
     # using a single ActiveRecord call, fetch a joined object that mimics the
     # following table of information:
     # --------------------------------------------------------------------------
@@ -584,7 +584,18 @@ describe 'ActiveRecord Obstacle Course' do
     # how will you turn this into the proper ActiveRecord commands?
 
     # ------------------ ActiveRecord Solution ----------------------
-    # data = []
+    data = User.joins('INNER JOIN orders ON orders.user_id = users.id').joins('INNER JOIN order_items ON order_items.order_id = orders.id').select('users.name AS user_name, orders.id AS order_id, count(order_items.id) AS item_count').group('users.name, orders.id').order('users.name DESC')
+
+
+
+    #
+    # select('user_name, COUNT(user_name) AS name')
+    # .group('user_name')
+    # .order("name")
+    # desired_station = select("start_station_id, COUNT(start_station_id) AS trips")
+    # .group("start_station_id")
+    # .order("trips DESC").limit(1)
+    # Station.find(desired_station.first.start_station_id)
     # ---------------------------------------------------------------
 
 
