@@ -32,7 +32,6 @@ describe 'ActiveRecord Obstacle Course' do
   let!(:order_14) { Order.create(amount: 900, items: [item_3, item_5, item_8, item_9], user: user_2) }
   let!(:order_15) { Order.create(amount: 1000, items: [item_1, item_4, item_5, item_7], user: user_3) }
 
-
   ### Here are the docs associated with this lesson: http://guides.rubyonrails.org/active_record_querying.html
 
   it 'finds orders by amount' do
@@ -204,7 +203,7 @@ describe 'ActiveRecord Obstacle Course' do
     expect(orders).to eq(expected_result)
   end
 
-   it 'should return all items except items: 3, 4 & 5' do
+  it 'should return all items except items: 3, 4 & 5' do
     items_not_included = [item_3, item_4, item_5]
     expected_result = [item_1, item_2, item_7, item_8, item_9, item_10]
 
@@ -279,8 +278,8 @@ describe 'ActiveRecord Obstacle Course' do
     # ------------------------------------------------------------
 
     # ------------------ Using ActiveRecord ----------------------
-  
-    names = Order.pluck(:items)
+
+    names = Item.joins(:orders).pluck(:name)
 
     # ------------------------------------------------------------
 
@@ -292,19 +291,19 @@ describe 'ActiveRecord Obstacle Course' do
     expected_result = [user_3.name, user_2.name]
 
     # ----------------------- Using Raw SQL-----------------------
-    users = ActiveRecord::Base.connection.execute("
-      select
-        distinct users.name
-      from users
-        join orders on orders.user_id=users.id
-        join order_items ON order_items.order_id=orders.id
-      where order_items.item_id=#{item_8.id}
-      ORDER BY users.name")
-    users = users.map {|u| u['name']}
+    # users = ActiveRecord::Base.connection.execute("
+    #   select
+    #     distinct users.name
+    #   from users
+    #     join orders on orders.user_id=users.id
+    #     join order_items ON order_items.order_id=orders.id
+    #   where order_items.item_id=#{item_8.id}
+    #   ORDER BY users.name")
+    # users = users.map {|u| u['name']}
     # ------------------------------------------------------------
 
     # ------------------ Using ActiveRecord ----------------------
-    # Solution goes here
+    users = User.joins(:order_items).where('order_items.item_id=?', item_8).distinct.pluck(:name)
     # ------------------------------------------------------------
 
     # Expectation
@@ -315,16 +314,16 @@ describe 'ActiveRecord Obstacle Course' do
     expected_result = ['Thing 1', 'Thing 4', 'Thing 5', 'Thing 7']
 
     # ----------------------- Using Ruby -------------------------
-    names = Order.last.items.all.map(&:name)
+    # names = Order.last.items.all.map(&:name)
     # ------------------------------------------------------------
 
     # ------------------ Using ActiveRecord ----------------------
-    # Solution goes here
+    names = Order.joins(:items).group(:id).order('id desc').first.items.pluck(:name)
     # ------------------------------------------------------------
 
     # Expectation
     expect(names).to eq(expected_result)
-  end
+   end
 
   it 'returns the sorted names of items for a user order' do
     expected_result = ['Thing 3', 'Thing 4', 'Thing 8', 'Thing 10']
@@ -343,14 +342,14 @@ describe 'ActiveRecord Obstacle Course' do
     # ------------------------------------------------------------
 
     # ------------------ Using ActiveRecord ----------------------
-    # Solution goes here
+    item_for_user_3_third_order = Order.where('orders.user_id=?', user_3).offset(2).limit(1).first.items.pluck(:name)
     # ------------------------------------------------------------
 
     # Expectation
     expect(items_for_user_3_third_order).to eq(expected_result)
   end
 
-  it 'returns the average amount for all orders' do
+  xit 'returns the average amount for all orders' do
     # ---------------------- Using Ruby -------------------------
     average = (Order.all.map(&:amount).inject(:+)) / (Order.count)
     # -----------------------------------------------------------
@@ -363,7 +362,7 @@ describe 'ActiveRecord Obstacle Course' do
     expect(average).to eq(650)
   end
 
-  it 'returns the average amount for all orders for one user' do
+  xit 'returns the average amount for all orders for one user' do
     # ---------------------- Using Ruby -------------------------
     orders = Order.all.map do |order|
       order if order.user_id == 3
@@ -380,7 +379,7 @@ describe 'ActiveRecord Obstacle Course' do
     expect(average.to_i).to eq(715)
   end
 
-  it 'calculates the total sales' do
+  xit 'calculates the total sales' do
     # ---------------------- Using Ruby -------------------------
     total_sales = Order.all.map(&:amount).inject(:+)
     # -----------------------------------------------------------
@@ -393,7 +392,7 @@ describe 'ActiveRecord Obstacle Course' do
     expect(total_sales).to eq(9750)
   end
 
-  it 'calculates the total sales for all but one user' do
+  xit 'calculates the total sales for all but one user' do
     # ---------------------- Using Ruby -------------------------
     orders = Order.all.map do |order|
       order if order.user_id != 2
@@ -409,7 +408,7 @@ describe 'ActiveRecord Obstacle Course' do
     expect(total_sales).to eq(6500)
   end
 
-  it 'returns all orders which include item_4' do
+  xit 'returns all orders which include item_4' do
     expected_result = [order_3, order_5, order_9, order_10, order_11, order_13, order_15]
 
     # ------------------ Inefficient Solution -------------------
@@ -425,7 +424,7 @@ describe 'ActiveRecord Obstacle Course' do
     expect(orders).to eq(expected_result)
   end
 
-  it 'returns all orders for user 2 which include item_4' do
+  xit 'returns all orders for user 2 which include item_4' do
     expected_result = [order_5, order_11]
 
     # ------------------ Inefficient Solution -------------------
@@ -442,105 +441,103 @@ describe 'ActiveRecord Obstacle Course' do
     expect(orders).to eq(expected_result)
   end
 
-  it 'returns items that are associated with one or more orders' do
-    unordered_item = Item.create(name: 'Unordered Item')
-    expected_result = [item_1, item_2, item_3, item_4, item_5, item_7, item_8, item_9, item_10]
+  # xit 'returns items that are associated with one or more orders' do
+  #   unordered_item = Item.create(name: 'Unordered Item')
+  #   expected_result = [item_1, item_2, item_3, item_4, item_5, item_7, item_8, item_9, item_10]
+  #
+  #   # ----------------------- Using Ruby -------------------------
+  #   items = Item.all
+  #
+  #   ordered_items = items.map do |item|
+  #     item if item.orders.present?
+  #   end
+  #
+  #   ordered_items = ordered_items.compact
+  #   # ------------------------------------------------------------
+  #
+  #   # ------------------ ActiveRecord Solution ----------------------
+  #   # Solution goes here
+  #   # ---------------------------------------------------------------
+  #
+  #   # Expectations
+  #   expect(ordered_items).to eq(expected_result)
+  #   expect(ordered_items).to_not include(unordered_item)
+  # end
+  #
+  #
+  #   # ----------------------- Using Ruby -------------------------
+  #   items = Item.all
+  #
+  #   ordered_items = items.map do |item|
+  #     item if item.orders.present?
+  #   end.compact
+  #
+  #   ordered_items_names = ordered_items.map(&:name)
+  #   # ------------------------------------------------------------
+  #
+  #   # ------------------ ActiveRecord Solution ----------------------
+  #
+  #   # Solution goes here
+  #   # When you find a solution, experiment with adjusting your method chaining
+  #   # Which ones are you able to switch around without relying on Ruby's Enumerable methods?
+  #   # ---------------------------------------------------------------
+  #
+  #   Expectations
+  #   expect(ordered_items_names).to eq(expected_result)
+  #   expect(ordered_items_names).to_not include(unordered_items)
+  # end
 
-    # ----------------------- Using Ruby -------------------------
-    items = Item.all
-
-    ordered_items = items.map do |item|
-      item if item.orders.present?
-    end
-
-    ordered_items = ordered_items.compact
-    # ------------------------------------------------------------
-
-    # ------------------ ActiveRecord Solution ----------------------
-    # Solution goes here
-    # ---------------------------------------------------------------
-
-    # Expectations
-    expect(ordered_items).to eq(expected_result)
-    expect(ordered_items).to_not include(unordered_item)
-  end
-
-  it 'returns the names of items that are associated with one or more orders' do
-    unordered_item_1 = Item.create(name: 'Unordered Item_1')
-    unordered_item_2 = Item.create(name: 'Unordered Item2_')
-    unordered_item_3 = Item.create(name: 'Unordered Item_3')
-
-    unordered_items = [unordered_item_1, unordered_item_2, unordered_item_3]
-    expected_result = ['Thing 1', 'Thing 2', 'Thing 3', 'Thing 4', 'Thing 5', 'Thing 7', 'Thing 8', 'Thing 9', 'Thing 10']
-
-    # ----------------------- Using Ruby -------------------------
-    items = Item.all
-
-    ordered_items = items.map do |item|
-      item if item.orders.present?
-    end.compact
-
-    ordered_items_names = ordered_items.map(&:name)
-    # ------------------------------------------------------------
-
-    # ------------------ ActiveRecord Solution ----------------------
-    # Solution goes here
-    # When you find a solution, experiment with adjusting your method chaining
-    # Which ones are you able to switch around without relying on Ruby's Enumerable methods?
-    # ---------------------------------------------------------------
-
-    # Expectations
-    expect(ordered_items_names).to eq(expected_result)
-    expect(ordered_items_names).to_not include(unordered_items)
-  end
-
-  xit 'returns a table of information for all users orders' do
-    custom_results = [user_3, user_1, user_2]
-
-    # using a single ActiveRecord call, fetch a joined object that mimics the
-    # following table of information:
-    # --------------------------------------------------------------------------
-    # user.name  |  total_order_count
-    # Dione      |         5
-    # Ian        |         5
-    # Sal        |         5
-
-    # ------------------ ActiveRecord Solution ----------------------
-    # custom_results =
-    # ---------------------------------------------------------------
-
-    expect(custom_results[0].name).to eq(user_3.name)
-    expect(custom_results[0].total_order_count).to eq(5)
-    expect(custom_results[1].name).to eq(user_1.name)
-    expect(custom_results[1].total_order_count).to eq(5)
-    expect(custom_results[2].name).to eq(user_2.name)
-    expect(custom_results[2].total_order_count).to eq(5)
-  end
-
-  xit 'returns a table of information for all users items' do
-    custom_results = [user_2, user_1, user_3]
-
-    # using a single ActiveRecord call, fetch a joined object that mimics the
-    # following table of information:
-    # --------------------------------------------------------------------------
-    # user.name  |  total_item_count
-    # Sal        |         20
-    # Ian        |         20
-    # Dione      |         20
-
-    # ------------------ ActiveRecord Solution ----------------------
-    # custom_results =
-    # ---------------------------------------------------------------
-
-    expect(custom_results[0].name).to eq(user_2.name)
-    expect(custom_results[0].total_item_count).to eq(20)
-    expect(custom_results[1].name).to eq(user_1.name)
-    expect(custom_results[1].total_item_count).to eq(20)
-    expect(custom_results[2].name).to eq(user_3.name)
-    expect(custom_results[2].total_item_count).to eq(20)
-  end
-
-  xit 'returns a table of information for all users orders and item counts' do
+  # xit 'returns a table of information for all users orders' do
+  #   custom_results = [user_3, user_1, user_2]
+  #
+  #   # using a single ActiveRecord call, fetch a joined object that mimics the
+  #   # following table of information:
+  #   # --------------------------------------------------------------------------
+  #   # user.name  |  total_order_count
+  #   # Dione      |         5
+  #   # Ian        |         5
+  #   # Sal        |         5
+  #
+  #   # ------------------ ActiveRecord Solution ----------------------
+  #   # custom_results =
+  #   # ---------------------------------------------------------------
+  #
+  #   expect(custom_results[0].name).to eq(user_3.name)
+  #   expect(custom_results[0].total_order_count).to eq(5)
+  #   expect(custom_results[1].name).to eq(user_1.name)
+  #   expect(custom_results[1].total_order_count).to eq(5)
+  #   expect(custom_results[2].name).to eq(user_2.name)
+  #   expect(custom_results[2].total_order_count).to eq(5)
+  # end
+  #
+  # xit 'returns a table of information for all users items' do
+  #   custom_results = [user_2, user_1, user_3]
+  #
+  #   # using a single ActiveRecord call, fetch a joined object that mimics the
+  #   # following table of information:
+  #   # --------------------------------------------------------------------------
+  #   # user.name  |  total_item_count
+  #   # Sal        |         20
+  #   # Ian        |         20
+  #   # Dione      |         20
+  #
+  #   # ------------------ ActiveRecord Solution ----------------------
+  #   # custom_results = User.joins(:order_items).order(name: :desc).group(:name).count
+  #   # custom_results = User.select('users.name, count(order_items.items_id) as total_item_count')
+                         # .joins(:order_items)
+                         # .group(:name)
+                         # .order(name: :desc)
+  #   # ---------------------------------------------------------------
+  #
+  #   expect(custom_results[0].name).to eq(user_2.name)
+  #   expect(custom_results[0].total_item_count).to eq(20)
+  #   expect(custom_results[1].name).to eq(user_1.name)
+  #   expect(custom_results[1].total_item_count).to eq(20)
+  #   expect(custom_results[2].name).to eq(user_3.name)
+  #   expect(custom_results[2].total_item_count).to eq(20)
+  # end
+  #
+  # xit 'returns a table of information for all users orders and item counts' do
     # using a single ActiveRecord call, fetch a joined object that mimics the
     # following table of information:
     # --------------------------------------------------------------------------
@@ -574,45 +571,46 @@ describe 'ActiveRecord Obstacle Course' do
     #
     # how will you turn this into the proper ActiveRecord commands?
 
-    # ------------------ ActiveRecord Solution ----------------------
-    # data = []
-    # ---------------------------------------------------------------
-
-
-    expect(data[0].user_name).to eq(user_2.name)
-    expect(data[0].order_id).to eq(2)
-    expect(data[0].item_count).to eq(4)
-    expect(data[5].user_name).to eq(user_1.name)
-    expect(data[5].order_id).to eq(1)
-    expect(data[5].item_count).to eq(4)
-    expect(data[12].user_name).to eq(user_3.name)
-    expect(data[12].order_id).to eq(9)
-    expect(data[12].item_count).to eq(4)
-  end
-
-  xit 'returns the names of items that have been ordered without n+1 queries' do
-    # What is an n+1 query?
-    # This video is older, but the concepts explained are still relevant:
-    # http://railscasts.com/episodes/372-bullet
-
-    # Don't worry about the lines containing Bullet. This is how we are detecting n+1 queries.
-    Bullet.enable = true
-    Bullet.raise = true
-    Bullet.start_request
-
-    # ------------------------------------------------------
-    orders = Order.all # Edit only this line
-    # ------------------------------------------------------
-
-    # Do not edit below this line
-    orders.each do |order|
-      order.items.each do |item|
-        item.name
-      end
-    end
-
-    # Don't worry about the lines containing Bullet. This is how we are detecting n+1 queries.
-    Bullet.perform_out_of_channel_notifications
-    Bullet.end_request
-  end
+  #   # ------------------ ActiveRecord Solution ----------------------
+  #   data = select('users.name As user_name', 'orders.id As order_id', 'count(order_item.item.id) AS item_count')
+  #                 .joins(:orders, :order_items).group("users.name, orders.id ")
+  #   # ---------------------------------------------------------------
+  #
+  #
+  #   expect(data[0].user_name).to eq(user_2.name)
+  #   expect(data[0].order_id).to eq(2)
+  #   expect(data[0].item_count).to eq(4)
+  #   expect(data[5].user_name).to eq(user_1.name)
+  #   expect(data[5].order_id).to eq(1)
+  #   expect(data[5].item_count).to eq(4)
+  #   expect(data[12].user_name).to eq(user_3.name)
+  #   expect(data[12].order_id).to eq(9)
+  #   expect(data[12].item_count).to eq(4)
+  # end
+  #
+  # xit 'returns the names of items that have been ordered without n+1 queries' do
+  #   # What is an n+1 query?
+  #   # This video is older, but the concepts explained are still relevant:
+  #   # http://railscasts.com/episodes/372-bullet
+  #
+  #   # Don't worry about the lines containing Bullet. This is how we are detecting n+1 queries.
+  #   Bullet.enable = true
+  #   Bullet.raise = true
+  #   Bullet.start_request
+  #
+  #   # ------------------------------------------------------
+  #   orders = Order.all # Edit only this line
+  #   # ------------------------------------------------------
+  #
+  #   # Do not edit below this line
+  #   orders.each do |order|
+  #     order.items.each do |item|
+  #       item.name
+  #     end
+  #   end
+  #
+  #   # Don't worry about the lines containing Bullet. This is how we are detecting n+1 queries.
+  #   Bullet.perform_out_of_channel_notifications
+  #   Bullet.end_request
+  # end
 end
