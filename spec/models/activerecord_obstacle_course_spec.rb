@@ -57,7 +57,7 @@ describe 'ActiveRecord Obstacle Course' do
     # ------------------------------------------------------------
 
     # ------------------ Using ActiveRecord ----------------------
-    order_id = Order.find_by(amount: Order.minimum(:amount)).id
+    order_id = Order.order(amount: :asc).limit(1).first.id
     # ------------------------------------------------------------
 
     # Expectation
@@ -70,7 +70,7 @@ describe 'ActiveRecord Obstacle Course' do
     # ------------------------------------------------------------
 
     # ------------------ Using ActiveRecord ----------------------
-    order_id = Order.find_by(amount: Order.maximum(:amount)).id
+    order_id = Order.order(amount: :desc).limit(1).first.id
     # ------------------------------------------------------------
 
     # Expectation
@@ -417,7 +417,7 @@ describe 'ActiveRecord Obstacle Course' do
     # -----------------------------------------------------------
 
     # ------------------ Improved Solution ----------------------
-    order_ids = Order.where(id: OrderItem.where(item_id: item_4.id).pluck(:order_id))
+    order_ids = Order.joins(:items).where(item_id: item_4.id)
     # -----------------------------------------------------------
 
     # Expectation
@@ -434,7 +434,7 @@ describe 'ActiveRecord Obstacle Course' do
     # -----------------------------------------------------------
 
     # ------------------ Improved Solution ----------------------
-    orders = Order.where(id: OrderItem.where(order_id: Order.where(user_id: user_2), item_id: item_4.id).pluck(:order_id))
+    orders = Order.joins(:order_items).where('order_items.item_id=? AND user_id=?', item_4.id, user_2.id)
     # -----------------------------------------------------------
 
     # Expectation
@@ -506,7 +506,7 @@ describe 'ActiveRecord Obstacle Course' do
     # Sal        |         5
 
     # ------------------ ActiveRecord Solution ----------------------
-    custom_results = User.joins(:orders).select(:name).group(:user_id).select('count(*) as total_order_count').order(:name)
+    custom_results = User.joins(:orders).group(:user_id).select('count(*) as total_order_count, name').order(:name)
     # ---------------------------------------------------------------
 
     expect(custom_results[0].name).to eq(user_3.name)
@@ -529,7 +529,7 @@ describe 'ActiveRecord Obstacle Course' do
     # Dione      |         20
 
     # ------------------ ActiveRecord Solution ----------------------
-    custom_results = User.joins(:items).select(:name).group(:user_id).select('count(*) as total_item_count').order(name: :desc)
+    custom_results = User.joins(:items).group(:user_id).select('count(*) as total_item_count, users.name').order(name: :desc)
     # ---------------------------------------------------------------
 
     expect(custom_results[0].name).to eq(user_2.name)
@@ -575,7 +575,7 @@ describe 'ActiveRecord Obstacle Course' do
     # how will you turn this into the proper ActiveRecord commands?
 
     # ------------------ ActiveRecord Solution ----------------------
-    data = User.joins(:items).select('users.name AS user_name').select(:order_id).group(:order_id).select('count(*) AS item_count').order(name: :desc)
+    data = User.joins(:items).select('users.name AS user_name, order_id, count(*) AS item_count').group(:order_id).order(name: :desc)
     # ---------------------------------------------------------------
 
 
@@ -601,7 +601,7 @@ describe 'ActiveRecord Obstacle Course' do
     Bullet.start_request
 
     # ------------------------------------------------------
-    orders = Order.all.includes(:order_items).includes(:items)
+    orders = Order.all.includes(:items)
     # ------------------------------------------------------
 
     # Do not edit below this line
