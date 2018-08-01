@@ -486,7 +486,7 @@ describe 'ActiveRecord Obstacle Course' do
     # Solution goes here
     # When you find a solution, experiment with adjusting your method chaining
     # Which ones are you able to switch around without relying on Ruby's Enumerable methods?
-    ordered_items_names = Item.joins(:orders).distinct.pluck(:name)
+    ordered_items_names = Item.joins(:order_items).distinct.pluck(:name)
     # ---------------------------------------------------------------
 
     # Expectations
