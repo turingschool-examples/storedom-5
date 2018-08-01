@@ -524,7 +524,7 @@ describe 'ActiveRecord Obstacle Course' do
 
     # using a single ActiveRecord call, fetch a joined object that mimics the
     # following table of information:
-    # --------------------------------------------------------------------------
+    # -----------------------------------------------------------------------
     # user.name  |  total_item_count
     # Sal        |         20
     # Ian        |         20
