@@ -1,5 +1,6 @@
 require 'rails_helper'
 
+
 describe 'ActiveRecord Obstacle Course' do
   let(:user_1)    { User.create(name: 'Ian') }
   let(:user_2)    { User.create(name: 'Sal') }
