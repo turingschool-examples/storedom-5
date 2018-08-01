@@ -57,7 +57,7 @@ describe 'ActiveRecord Obstacle Course' do
     # ------------------------------------------------------------
 
     # ------------------ Using ActiveRecord ----------------------
-    order_id = Order.order(amount: :asc).first.id
+    order_id = Order.order(amount: :asc).limit(1).first.id
     # ------------------------------------------------------------
 
     # Expectation
@@ -70,7 +70,7 @@ describe 'ActiveRecord Obstacle Course' do
     # ------------------------------------------------------------
 
     # ------------------ Using ActiveRecord ----------------------
-    order_id = Order.order(amount: :desc).first.id
+    order_id = Order.order(amount: :desc).limit(1).first.id
     # ------------------------------------------------------------
 
     # Expectation
@@ -401,7 +401,7 @@ describe 'ActiveRecord Obstacle Course' do
     # end.select{|i| !i.nil?}
     # total_sales = orders.map(&:amount).inject(:+)
     # -----------------------------------------------------------
-    total_sales = Order.where('user_id != 2').sum(:amount)
+    total_sales = Order.where.not(user_id: 2).sum(:amount)
     # -----------------------------------------------------------
 
     # Expectation
@@ -456,7 +456,7 @@ describe 'ActiveRecord Obstacle Course' do
     # ------------------------------------------------------------
 
     # ------------------ ActiveRecord Solution ----------------------
-    ordered_items = Item.where(id: OrderItem.pluck(:item_id))
+    ordered_items = Item.distinct.joins(:order_items)
     # ---------------------------------------------------------------
 
     # Expectations
@@ -466,7 +466,7 @@ describe 'ActiveRecord Obstacle Course' do
 
   it 'returns the names of items that are associated with one or more orders' do
     unordered_item_1 = Item.create(name: 'Unordered Item_1')
-    unordered_item_2 = Item.create(name: 'Unordered Item2_')
+    unordered_item_2 = Item.create(name: 'Unordered Item_2')
     unordered_item_3 = Item.create(name: 'Unordered Item_3')
 
     unordered_items = [unordered_item_1, unordered_item_2, unordered_item_3]
@@ -483,7 +483,7 @@ describe 'ActiveRecord Obstacle Course' do
     # ------------------------------------------------------------
 
     # ------------------ ActiveRecord Solution ----------------------
-    ordered_items_names = Item.where(id: OrderItem.pluck(:item_id)).pluck(:name)
+    ordered_items_names = Item.distinct.joins(:order_items).pluck(:name)
     # ---------------------------------------------------------------
 
     # Expectations
@@ -503,7 +503,7 @@ describe 'ActiveRecord Obstacle Course' do
     # Sal        |         5
 
     # ------------------ ActiveRecord Solution ----------------------
-    custom_results = User.select("users.*, count(user_id) AS total_order_count")
+    custom_results = User.select("users.*, COUNT(user_id) AS total_order_count")
     .joins(:orders)
     .group(:name)
     # ---------------------------------------------------------------
@@ -528,7 +528,7 @@ describe 'ActiveRecord Obstacle Course' do
     # Dione      |         20
 
     # ------------------ ActiveRecord Solution ----------------------
-    custom_results = User.select("name, count(item_id) AS total_item_count")
+    custom_results = User.select('users.name, COUNT(item_id) AS total_item_count')
     .joins(:order_items)
     .group(:name)
     .order(name: :desc)
@@ -578,7 +578,7 @@ describe 'ActiveRecord Obstacle Course' do
 
     # ------------------ ActiveRecord Solution ----------------------
 
-    data = User.select('users.name AS user_name, orders.id AS order_id, count(order_items.id) AS item_count')
+    data = User.select('users.name AS user_name, orders.id AS order_id, COUNT(order_items.id) AS item_count')
     .joins(:order_items)
     .group(:order_id)
     .order(name: :desc)
