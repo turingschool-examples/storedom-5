@@ -57,7 +57,7 @@ describe 'ActiveRecord Obstacle Course' do
     # ------------------------------------------------------------
 
     # ------------------ Using ActiveRecord ----------------------
-    order_id = Order.order(:amount).first['id']
+    order_id = Order.order(:amount).first.id
     # ------------------------------------------------------------
 
     # Expectation
@@ -70,7 +70,7 @@ describe 'ActiveRecord Obstacle Course' do
     # ------------------------------------------------------------
 
     # ------------------ Using ActiveRecord ----------------------
-    order_id = Order.order(:amount).last['id']
+    order_id = Order.order('amount desc').first.id
     # ------------------------------------------------------------
 
     # Expectation
@@ -168,6 +168,8 @@ describe 'ActiveRecord Obstacle Course' do
 
     # ------------------ Using ActiveRecord ----------------------
     orders_of_user_3 = Order.where(user_id: 3)
+    # OR
+    orders_of_user_3 = User.find(3).orders
     # ------------------------------------------------------------
 
     # Expectation
@@ -182,7 +184,7 @@ describe 'ActiveRecord Obstacle Course' do
     # ------------------------------------------------------------
 
     # ------------------ Using ActiveRecord ----------------------
-    orders = Order.order(:amount).reverse
+    orders = Order.order('amount desc')
     # ------------------------------------------------------------
 
     # Expectation
@@ -302,7 +304,7 @@ describe 'ActiveRecord Obstacle Course' do
     # ------------------------------------------------------------
 
     # ------------------ Using ActiveRecord ----------------------
-    users = User.joins(:orders => :items).where(:items => {:id => item_8.id}).pluck(:name).uniq
+    users = User.joins(:items).where(items: {id: item_8.id}).distinct.pluck(:name)
     # ------------------------------------------------------------
 
     # Expectation
@@ -317,7 +319,6 @@ describe 'ActiveRecord Obstacle Course' do
     # ------------------------------------------------------------
 
     # ------------------ Using ActiveRecord ----------------------
-    # require 'pry';binding.pry
     names = Order.last.items.pluck(:name)
     # ------------------------------------------------------------
 
@@ -373,6 +374,8 @@ describe 'ActiveRecord Obstacle Course' do
 
     # ------------------ Using ActiveRecord ----------------------
     average = Order.where(user_id:3).average(:amount)
+    #OR
+    average = User.find(3).orders.average(:amount)
     # ------------------------------------------------------------
 
     # Expectation
@@ -385,7 +388,7 @@ describe 'ActiveRecord Obstacle Course' do
     # -----------------------------------------------------------
 
     # ------------------ Using ActiveRecord ---------------------
-    total_sales = Order.pluck(:amount).sum
+    total_sales = Order.sum(:amount)
     # -----------------------------------------------------------
 
     # Expectation
@@ -401,7 +404,7 @@ describe 'ActiveRecord Obstacle Course' do
     # -----------------------------------------------------------
 
     # ------------------ Using ActiveRecord ---------------------
-    total_sales = Order.where.not(user_id:2).pluck(:amount).sum
+    total_sales = Order.where.not(user_id:2).sum(:amount)
     # -----------------------------------------------------------
 
     # Expectation
@@ -417,7 +420,7 @@ describe 'ActiveRecord Obstacle Course' do
     # -----------------------------------------------------------
 
     # ------------------ Improved Solution ----------------------
-    orders = Order.find(OrderItem.where(item_id: item_4.id).pluck(:order_id))
+    orders = Order.joins(:items).where(items: {id: item_4.id})
     # -----------------------------------------------------------
 
     # Expectation
@@ -434,7 +437,7 @@ describe 'ActiveRecord Obstacle Course' do
     # -----------------------------------------------------------
 
     # ------------------ Improved Solution ----------------------
-    orders = Order.find(OrderItem.where(order_id: Order.where(user_id: user_2), item_id: item_4.id).pluck(:order_id))
+    orders = User.find(2).orders.joins(:items).where(items: {id: item_4.id})
     # -----------------------------------------------------------
 
     # Expectation
@@ -456,7 +459,7 @@ describe 'ActiveRecord Obstacle Course' do
     # ------------------------------------------------------------
 
     # ------------------ ActiveRecord Solution ----------------------
-    ordered_items = Item.find(OrderItem.all.pluck(:item_id))
+    ordered_items = Item.find(OrderItem.pluck(:item_id))
     # ---------------------------------------------------------------
 
     # Expectations
@@ -483,7 +486,7 @@ describe 'ActiveRecord Obstacle Course' do
     # ------------------------------------------------------------
 
     # ------------------ ActiveRecord Solution ----------------------
-    ordered_items = Item.find(OrderItem.all.pluck(:item_id)).pluck(:name)
+    ordered_items = Item.find(OrderItem.pluck(:item_id)).pluck(:name)
     # ---------------------------------------------------------------
 
     # Expectations
@@ -503,7 +506,7 @@ describe 'ActiveRecord Obstacle Course' do
     # Sal        |         5
 
     # ------------------ ActiveRecord Solution ----------------------
-    custom_results = User.select('users.*, count(orders.user_id) AS total_order_count').joins(:orders).group(:user_id, :id).order(:name)
+    custom_results = User.select('users.*, count(orders.user_id) AS total_order_count').joins(:orders).group(:id).order(:name)
     # ---------------------------------------------------------------
 
     expect(custom_results[0].name).to eq(user_3.name)
@@ -526,7 +529,7 @@ describe 'ActiveRecord Obstacle Course' do
     # Dione      |         20
 
     # ------------------ ActiveRecord Solution ----------------------
-    custom_results = User.select('users.*, count(users.id) AS total_item_count').joins(:orders => :items).group(:id, :id).order('name desc')
+    custom_results = User.select('users.*, count(users.id) AS total_item_count').joins(:items).group(:id).order('name desc')
     # ---------------------------------------------------------------
 
     expect(custom_results[0].name).to eq(user_2.name)
@@ -572,7 +575,7 @@ describe 'ActiveRecord Obstacle Course' do
     # how will you turn this into the proper ActiveRecord commands?
 
     # ------------------ ActiveRecord Solution ----------------------
-    data = User.select('users.*, users.name AS user_name, orders.id AS order_id, count(order_items.id) AS item_count').joins(:orders, :orders => :order_items).group(:name, :order_id).order('user_name desc')
+    data = User.select('users.*, users.name AS user_name, orders.id AS order_id, count(order_items.id) AS item_count').joins(:order_items).group(:name, :order_id).order('user_name desc')
     # ---------------------------------------------------------------
 
 
@@ -598,7 +601,7 @@ describe 'ActiveRecord Obstacle Course' do
     Bullet.start_request
 
     # ------------------------------------------------------
-    orders = Order.all.includes(:order_items, :items) # Edit only this line
+    orders = Order.includes(:items) # Edit only this line
     # ------------------------------------------------------
 
     # Do not edit below this line
