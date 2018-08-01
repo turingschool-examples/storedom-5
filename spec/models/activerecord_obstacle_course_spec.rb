@@ -43,6 +43,8 @@ describe 'ActiveRecord Obstacle Course' do
 
     # ------------------ Using ActiveRecord ----------------------
     # Solution goes here
+    orders_of_500 = Order.where(amount: 500)
+    orders_of_200 = Order.where(amount: 200)
     # ------------------------------------------------------------
 
     # Expectation
@@ -57,6 +59,7 @@ describe 'ActiveRecord Obstacle Course' do
 
     # ------------------ Using ActiveRecord ----------------------
     # Solution goes here
+    order_id = Order.all.order("amount ASC").limit(1).first['id']
     # ------------------------------------------------------------
 
     # Expectation
@@ -70,6 +73,7 @@ describe 'ActiveRecord Obstacle Course' do
 
     # ------------------ Using ActiveRecord ----------------------
     # Solution goes here
+    order_id = Order.all.order("amount DESC").limit(1).first['id']
     # ------------------------------------------------------------
 
     # Expectation
@@ -89,6 +93,8 @@ describe 'ActiveRecord Obstacle Course' do
 
     # ------------------ Using ActiveRecord ----------------------
     # Solution goes here
+    orders_of_500_and_700 = Order.where("amount = 500 OR amount = 700")
+    orders_of_700_and_1000 = Order.where("amount = 700 OR amount = 1000")
     # ------------------------------------------------------------
 
     # Expectation
@@ -105,6 +111,7 @@ describe 'ActiveRecord Obstacle Course' do
 
     # ------------------ Using ActiveRecord ----------------------
     # Solution goes here
+    items = Item.where(id: ids)
     # ------------------------------------------------------------
 
     # Expectation
@@ -121,6 +128,7 @@ describe 'ActiveRecord Obstacle Course' do
 
     # ------------------ Using ActiveRecord ----------------------
     # Solution goes here
+    orders = Order.where(id: ids)
     # ------------------------------------------------------------
 
     # Expectation
@@ -136,6 +144,7 @@ describe 'ActiveRecord Obstacle Course' do
 
     # ------------------ Using ActiveRecord ----------------------
     # Solution goes here
+    orders_between_700_and_1000 = Order.where(amount: 700..1000)
     # ------------------------------------------------------------
 
     # Expectation
@@ -151,6 +160,7 @@ describe 'ActiveRecord Obstacle Course' do
 
     # ------------------ Using ActiveRecord ----------------------
     # Solution goes here
+    orders_less_than_550 = Order.where("amount < 550")
     # ------------------------------------------------------------
 
     # Expectation
@@ -166,6 +176,7 @@ describe 'ActiveRecord Obstacle Course' do
 
     # ------------------ Using ActiveRecord ----------------------
     # Solution goes here
+    orders_of_user_3 = Order.where(user_id: 3)
     # ------------------------------------------------------------
 
     # Expectation
@@ -181,6 +192,7 @@ describe 'ActiveRecord Obstacle Course' do
 
     # ------------------ Using ActiveRecord ----------------------
     # Solution goes here
+    orders = Order.order(amount: :desc)
     # ------------------------------------------------------------
 
     # Expectation
@@ -196,6 +208,7 @@ describe 'ActiveRecord Obstacle Course' do
 
     # ------------------ Using ActiveRecord ----------------------
     # Solution goes here
+    orders = Order.order(amount: :asc)
     # ------------------------------------------------------------
 
     # Expectation
@@ -212,6 +225,7 @@ describe 'ActiveRecord Obstacle Course' do
 
     # ------------------ Using ActiveRecord ----------------------
     # Solution goes here
+    items = Item.where.not(id: items_not_included)
     # ------------------------------------------------------------
 
     # Expectation
@@ -228,6 +242,7 @@ describe 'ActiveRecord Obstacle Course' do
 
     # ------------------ Using ActiveRecord ----------------------
     # Solution goes here
+    grouped_items = Order.find(3).items.order(:name)
     # ------------------------------------------------------------
 
     # Expectation
@@ -243,6 +258,7 @@ describe 'ActiveRecord Obstacle Course' do
 
     # ------------------ Using ActiveRecord ----------------------
     # Solution goes here
+    names = Item.pluck(:name)
     # ------------------------------------------------------------
 
     # Expectation
@@ -278,6 +294,8 @@ describe 'ActiveRecord Obstacle Course' do
 
     # ------------------ Using ActiveRecord ----------------------
     # Solution goes here
+    names = Order.joins(:items).pluck(:name)
+    # what's different between include and joins?  include gave the same data in a different order
     # ------------------------------------------------------------
 
     # Expectation
@@ -301,6 +319,7 @@ describe 'ActiveRecord Obstacle Course' do
 
     # ------------------ Using ActiveRecord ----------------------
     # Solution goes here
+    users = User.select(:name).distinct.joins(:orders, :order_items).where("order_items.item_id=?", item_8.id).order(:name).pluck(:name)
     # ------------------------------------------------------------
 
     # Expectation
@@ -316,6 +335,7 @@ describe 'ActiveRecord Obstacle Course' do
 
     # ------------------ Using ActiveRecord ----------------------
     # Solution goes here
+    names = Order.find(15).items.pluck(:name)
     # ------------------------------------------------------------
 
     # Expectation
@@ -340,6 +360,7 @@ describe 'ActiveRecord Obstacle Course' do
 
     # ------------------ Using ActiveRecord ----------------------
     # Solution goes here
+    items_for_user_3_third_order = Order.where(user_id: 3).third.items.pluck(:name)
     # ------------------------------------------------------------
 
     # Expectation
@@ -353,6 +374,7 @@ describe 'ActiveRecord Obstacle Course' do
 
     # ------------------ Using ActiveRecord ----------------------
     # Solution goes here
+    average = Order.average(:amount)
     # ------------------------------------------------------------
 
     # Expectation
@@ -370,6 +392,7 @@ describe 'ActiveRecord Obstacle Course' do
 
     # ------------------ Using ActiveRecord ----------------------
     # Solution goes here
+    Order.where(user_id: 3).average(:amount)
     # ------------------------------------------------------------
 
     # Expectation
@@ -383,6 +406,7 @@ describe 'ActiveRecord Obstacle Course' do
 
     # ------------------ Using ActiveRecord ---------------------
     # Solution goes here
+    total_sales = Order.sum(:amount)
     # -----------------------------------------------------------
 
     # Expectation
@@ -399,6 +423,7 @@ describe 'ActiveRecord Obstacle Course' do
 
     # ------------------ Using ActiveRecord ---------------------
     # Solution goes here
+    total_sales = Order.where.not(user_id: 2).sum(:amount)
     # -----------------------------------------------------------
 
     # Expectation
@@ -415,6 +440,7 @@ describe 'ActiveRecord Obstacle Course' do
 
     # ------------------ Improved Solution ----------------------
     #  Solution goes here
+    orders = Order.joins(:order_items).where("order_items.item_id = ?", item_4.id)
     # -----------------------------------------------------------
 
     # Expectation
@@ -432,6 +458,7 @@ describe 'ActiveRecord Obstacle Course' do
 
     # ------------------ Improved Solution ----------------------
     #  Solution goes here
+    orders = Order.joins(:order_items).where(user_id: user_2.id).where("order_items.item_id = ?", item_4.id)
     # -----------------------------------------------------------
 
     # Expectation
@@ -454,6 +481,7 @@ describe 'ActiveRecord Obstacle Course' do
 
     # ------------------ ActiveRecord Solution ----------------------
     # Solution goes here
+    ordered_items = Item.joins(:order_items).distinct
     # ---------------------------------------------------------------
 
     # Expectations
@@ -483,6 +511,7 @@ describe 'ActiveRecord Obstacle Course' do
     # Solution goes here
     # When you find a solution, experiment with adjusting your method chaining
     # Which ones are you able to switch around without relying on Ruby's Enumerable methods?
+    ordered_items = Item.joins(:order_items).distinct.pluck(:name)
     # ---------------------------------------------------------------
 
     # Expectations
@@ -490,7 +519,7 @@ describe 'ActiveRecord Obstacle Course' do
     expect(ordered_items_names).to_not include(unordered_items)
   end
 
-  xit 'returns a table of information for all users orders' do
+  it 'returns a table of information for all users orders' do
     custom_results = [user_3, user_1, user_2]
 
     # using a single ActiveRecord call, fetch a joined object that mimics the
@@ -502,7 +531,11 @@ describe 'ActiveRecord Obstacle Course' do
     # Sal        |         5
 
     # ------------------ ActiveRecord Solution ----------------------
-    # custom_results =
+    custom_results = User.select('name', 'COUNT(user_id) as total_order_count')
+                         .joins(:orders)
+                         .group(:user_id)
+                         .order(name: :asc)
+
     # ---------------------------------------------------------------
 
     expect(custom_results[0].name).to eq(user_3.name)
@@ -513,7 +546,7 @@ describe 'ActiveRecord Obstacle Course' do
     expect(custom_results[2].total_order_count).to eq(5)
   end
 
-  xit 'returns a table of information for all users items' do
+  it 'returns a table of information for all users items' do
     custom_results = [user_2, user_1, user_3]
 
     # using a single ActiveRecord call, fetch a joined object that mimics the
@@ -525,7 +558,11 @@ describe 'ActiveRecord Obstacle Course' do
     # Dione      |         20
 
     # ------------------ ActiveRecord Solution ----------------------
-    # custom_results =
+    custom_results = User.select('users.name, count(order_items.id) as total_item_count')
+                         .joins(:order_items)
+                         .group(:user_id)
+                         .order(name: :desc)
+
     # ---------------------------------------------------------------
 
     expect(custom_results[0].name).to eq(user_2.name)
@@ -536,7 +573,7 @@ describe 'ActiveRecord Obstacle Course' do
     expect(custom_results[2].total_item_count).to eq(20)
   end
 
-  xit 'returns a table of information for all users orders and item counts' do
+  it 'returns a table of information for all users orders and item counts' do
     # using a single ActiveRecord call, fetch a joined object that mimics the
     # following table of information:
     # --------------------------------------------------------------------------
@@ -572,6 +609,10 @@ describe 'ActiveRecord Obstacle Course' do
 
     # ------------------ ActiveRecord Solution ----------------------
     # data = []
+    data = User.select('users.name as user_name', 'orders.id as order_id', 'COUNT(order_items.id) as item_count')
+               .joins(:order_items)
+               .group(:name, :order_id)
+               .order(name: :desc)
     # ---------------------------------------------------------------
 
 
@@ -586,7 +627,7 @@ describe 'ActiveRecord Obstacle Course' do
     expect(data[12].item_count).to eq(4)
   end
 
-  xit 'returns the names of items that have been ordered without n+1 queries' do
+  it 'returns the names of items that have been ordered without n+1 queries' do
     # What is an n+1 query?
     # This video is older, but the concepts explained are still relevant:
     # http://railscasts.com/episodes/372-bullet
@@ -597,7 +638,7 @@ describe 'ActiveRecord Obstacle Course' do
     Bullet.start_request
 
     # ------------------------------------------------------
-    orders = Order.all # Edit only this line
+    orders = Order.includes(:items)
     # ------------------------------------------------------
 
     # Do not edit below this line
