@@ -529,7 +529,7 @@ describe 'ActiveRecord Obstacle Course' do
     # Dione      |         20
 
     # ------------------ ActiveRecord Solution ----------------------
-    custom_results = User.select("name, count(item_id) as total_item_count").joins(:order_items).group(:name).order(name: :desc)
+    custom_results = User.select("users.name, count(item_id) as total_item_count").joins(:order_items).group(:name).order(name: :desc)
     # ---------------------------------------------------------------
 
     expect(custom_results[0].name).to eq(user_2.name)
@@ -577,7 +577,8 @@ describe 'ActiveRecord Obstacle Course' do
     # ------------------ ActiveRecord Solution ----------------------
     data = User.select("users.name as user_name, orders.id as order_id, count(order_items.id) as item_count")
                 .joins(:order_items).group(:order_id).order(name: :desc)
-    # ---------------------------------------------------------------
+
+    # ------------scan(/pattern/) { |match|  }---------------------------------------------------
 
 
     expect(data[0].user_name).to eq(user_2.name)
