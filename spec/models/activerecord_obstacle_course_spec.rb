@@ -610,3 +610,4 @@ describe 'ActiveRecord Obstacle Course' do
     Bullet.end_request
   end
 end
+
