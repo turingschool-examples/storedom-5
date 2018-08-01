@@ -493,7 +493,7 @@ describe 'ActiveRecord Obstacle Course' do
     expect(ordered_items_names).to_not include(unordered_items)
   end
 
-  xit 'returns a table of information for all users orders' do
+  it 'returns a table of information for all users orders' do
     custom_results = [user_3, user_1, user_2]
 
     # using a single ActiveRecord call, fetch a joined object that mimics the
@@ -505,7 +505,10 @@ describe 'ActiveRecord Obstacle Course' do
     # Sal        |         5
 
     # ------------------ ActiveRecord Solution ----------------------
-
+    custom_results = User.select('users.name, count(user_id) AS total_order_count')
+                           .joins(:orders)
+                           .group(:name)
+                           .order(:name)
     # ---------------------------------------------------------------
 
     expect(custom_results[0].name).to eq(user_3.name)
@@ -542,8 +545,8 @@ describe 'ActiveRecord Obstacle Course' do
     expect(custom_results[2].name).to eq(user_3.name)
     expect(custom_results[2].total_item_count).to eq(20)
   end
-  #
-  # xit 'returns a table of information for all users orders and item counts' do
+
+  it 'returns a table of information for all users orders and item counts' do
     # using a single ActiveRecord call, fetch a joined object that mimics the
     # following table of information:
     # --------------------------------------------------------------------------
@@ -563,7 +566,7 @@ describe 'ActiveRecord Obstacle Course' do
     # Dione      |  9         |  4           |
     # Dione      |  12        |  4           |
     # Dione      |  15        |  4           |
-
+    #
     # the raw SQL to produce this table would look like the following:
     # ActiveRecord::Base.connection.execute('select
     #   users.name as user_name,
@@ -577,46 +580,49 @@ describe 'ActiveRecord Obstacle Course' do
     #
     # how will you turn this into the proper ActiveRecord commands?
 
-  #   # ------------------ ActiveRecord Solution ----------------------
-  #   data = select('users.name As user_name', 'orders.id As order_id', 'count(order_item.item.id) AS item_count')
-  #                 .joins(:orders, :order_items).group("users.name, orders.id ")
-  #   # ---------------------------------------------------------------
-  #
-  #
-  #   expect(data[0].user_name).to eq(user_2.name)
-  #   expect(data[0].order_id).to eq(2)
-  #   expect(data[0].item_count).to eq(4)
-  #   expect(data[5].user_name).to eq(user_1.name)
-  #   expect(data[5].order_id).to eq(1)
-  #   expect(data[5].item_count).to eq(4)
-  #   expect(data[12].user_name).to eq(user_3.name)
-  #   expect(data[12].order_id).to eq(9)
-  #   expect(data[12].item_count).to eq(4)
-  # end
-  #
-  # xit 'returns the names of items that have been ordered without n+1 queries' do
-  #   # What is an n+1 query?
-  #   # This video is older, but the concepts explained are still relevant:
-  #   # http://railscasts.com/episodes/372-bullet
-  #
-  #   # Don't worry about the lines containing Bullet. This is how we are detecting n+1 queries.
-  #   Bullet.enable = true
-  #   Bullet.raise = true
-  #   Bullet.start_request
-  #
-  #   # ------------------------------------------------------
-  #   orders = Order.all # Edit only this line
-  #   # ------------------------------------------------------
-  #
-  #   # Do not edit below this line
-  #   orders.each do |order|
-  #     order.items.each do |item|
-  #       item.name
-  #     end
-  #   end
-  #
-  #   # Don't worry about the lines containing Bullet. This is how we are detecting n+1 queries.
-  #   Bullet.perform_out_of_channel_notifications
-  #   Bullet.end_request
-  # end
+    # ------------------ ActiveRecord Solution ----------------------
+    data = User.select("users.*, users.name AS user_name, orders.id AS order_id, count(item_id) AS item_count")
+               .joins(:order_items)
+               .group(:name)
+               .group(:order_id)
+               .order(name: :desc)
+    # ---------------------------------------------------------------
+
+
+    expect(data[0].user_name).to eq(user_2.name)
+    expect(data[0].order_id).to eq(2)
+    expect(data[0].item_count).to eq(4)
+    expect(data[5].user_name).to eq(user_1.name)
+    expect(data[5].order_id).to eq(1)
+    expect(data[5].item_count).to eq(4)
+    expect(data[12].user_name).to eq(user_3.name)
+    expect(data[12].order_id).to eq(9)
+    expect(data[12].item_count).to eq(4)
+  end
+
+  it 'returns the names of items that have been ordered without n+1 queries' do
+    # What is an n+1 query?
+    # This video is older, but the concepts explained are still relevant:
+    # http://railscasts.com/episodes/372-bullet
+
+    # Don't worry about the lines containing Bullet. This is how we are detecting n+1 queries.
+    Bullet.enable = true
+    Bullet.raise = true
+    Bullet.start_request
+
+    # ------------------------------------------------------
+    orders = Order.includes(:items) # Edit only this line
+    # ------------------------------------------------------
+
+    # Do not edit below this line
+    orders.each do |order|
+      order.items.each do |item|
+        item.name
+      end
+    end
+
+    # Don't worry about the lines containing Bullet. This is how we are detecting n+1 queries.
+    Bullet.perform_out_of_channel_notifications
+    Bullet.end_request
+  end
 end
