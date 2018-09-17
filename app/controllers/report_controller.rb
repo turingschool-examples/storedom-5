@@ -3,8 +3,7 @@ class ReportController < ApplicationController
   end
 
   def create
-    count = ReportGenerator.new.multiple_orders
-    ReportMailer.orders(count, "somewhere@example.io").deliver_now
+    OrderCounterJob.perform_later
     redirect_to root_url
   end
 end
